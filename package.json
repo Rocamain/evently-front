@@ -12,7 +12,8 @@
     "style:prettier": "prettier --check '**/*.{js,ts,tsx}'",
     "style:all": "npm run style:lint && npm run style:prettier",
     "pretty:fix": "prettier '**/*.{js,ts,tsx}' --write",
-    "fix": "npx eslint \"./**/*.js\" --cache --cache-strategy content --fix"
+    "fix": "npx eslint \"./**/*.js\" --cache --cache-strategy content --fix",
+    "prepare": "husky"
   },
   "dependencies": {
     "next": "14.1.0",
@@ -32,6 +33,7 @@
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.33.2",
+    "husky": "^9.0.11",
     "postcss": "^8",
     "prettier": "^3.2.5",
     "tailwindcss": "^3.3.0",
