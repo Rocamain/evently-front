@@ -1,3 +1,28 @@
 {
-  "extends": "next/core-web-vitals"
+  "env": {
+    "commonjs": true,
+    "node": true,
+    "jest": true,
+    "es2023": true
+  },
+  "extends": [
+    "standard",
+    "eslint-config-prettier",
+    "next",
+    "next/core-web-vitals"
+  ],
+  "overrides": [],
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "rules": {
+    "semi": ["error", "never"],
+    "line-break-style": "off",
+    "no-use-before-define": "off",
+    "import/prefer-default-export": "off",
+    "comma-dangle": "off",
+    "no-console": "off",
+    "import/no-extraneous-dependencies": "off",
+    "prettier/prettier": "off"
+  }
 }
