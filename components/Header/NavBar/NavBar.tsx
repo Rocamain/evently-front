@@ -2,7 +2,7 @@ import LinkButton from '@/components/LinkButton/LinkButton'
 
 export default function NavBar() {
   return (
-    <nav>
+    <nav className="flex-grow-0">
       <ul className=" flex justify-end space-x-4 items-center">
         <li>
           <LinkButton href="/register" transparent={true}>
