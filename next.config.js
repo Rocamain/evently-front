@@ -1,4 +1,7 @@
+const webpack = require('webpack')
+const { parsed: myEnv } = require('dotenv').config()
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   webpack(config) {
     // Grab the existing rule that handles SVG imports
@@ -24,10 +27,11 @@ const nextConfig = {
     // Modify the file loader rule to ignore *.svg, since we have it handled now.
     fileLoaderRule.exclude = /\.svg$/i
 
+    // Implements Dotenv , so env variable are protected and accessible from client side components
+
+    config.plugins.push(new webpack.EnvironmentPlugin(myEnv))
     return config
   },
-
-  // ...other config
 }
 
-export default nextConfig
+module.exports = nextConfig
