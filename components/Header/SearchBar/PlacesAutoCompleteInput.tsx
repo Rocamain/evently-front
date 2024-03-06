@@ -51,7 +51,7 @@ export default function PlacesAutoCompleteInput({
   })
 
   const inputClassName =
-    'outline-none appearance-none text-md text-gray-600 p-3 pl-4 border border-gray-400 hover:border-gray-300 focus:border-red-400 hover:z-10 focus:z-10 flex-grow w-full rounded-r-none placeholder:text-gray-500 ' +
+    'outline-none appearance-none text-md text-gray-600 p-3 pl-4 rounded-bl-lg sm:rounded-none border border-gray-400 hover:border-gray-300 focus:border-red-400 hover:z-10 focus:z-10 flex-grow w-full rounded-r-none placeholder:text-gray-500 ' +
     // (isSmallScreen
     //   ? ` ${placePredictions.length ? 'rounded-none' : 'rounded-bl-lg'}`
     //   : 'rounded-l-none')
@@ -108,7 +108,7 @@ export default function PlacesAutoCompleteInput({
   }
 
   return (
-    <div className="relative flex-grow w-1/2 outline-none">
+    <div className="relative flex-grow sm:w-1/2 outline-none">
       <div className="sticky top-0 flex items-center outline-none">
         <input
           name="autocompleteText"
@@ -127,6 +127,9 @@ export default function PlacesAutoCompleteInput({
           onBlur={(e) => {
             console.log(e.relatedTarget)
             if (!e.relatedTarget) setShow(false)
+            if (e.relatedTarget?.id === 'SearchByWordsInput') {
+              setShow(false)
+            }
           }}
           value={inputValue}
         />
