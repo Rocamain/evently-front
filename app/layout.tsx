@@ -12,16 +12,28 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode
+  modal: React.ReactNode
 }>) {
+  // const isMain = pathname === '/'
+
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <header>
-          <Header />
-        </header>
-        {children}
+      <body className={inter.className + ' overscroll-none'}>
+        <Header />
+        <main id={'background-blob'} className="min-h-full">
+          {children}
+          {modal}
+        </main>
+        <footer
+          style={{
+            height: '25vh',
+            backgroundColor: 'black',
+            color: 'white',
+          }}
+        ></footer>
       </body>
     </html>
   )

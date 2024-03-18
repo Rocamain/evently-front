@@ -1,7 +1,8 @@
-export default function SignIn() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1>Eventy</h1>
-    </main>
-  )
+export const metadata = {
+  title: 'Evently SignIn',
+  description: 'Evently signIn to your account',
+}
+
+export default function SingInPage() {
+  return <h1>SingIn</h1>
 }
