@@ -29,6 +29,7 @@ export default function Modal({ children }: { children: React.ReactNode }) {
       if (onDismiss) {
         if (dialogRef.current) {
           const dialogDimensions = dialogRef.current.getBoundingClientRect()
+          // if click outside the dialog  then close it.
           if (
             e.clientX < dialogDimensions.left ||
             e.clientX > dialogDimensions.right ||
