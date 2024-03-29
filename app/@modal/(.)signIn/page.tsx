@@ -1,4 +1,4 @@
-import SingInPage from '@/app/(pages)/(auth)/signIn/page'
+import SignIn from '@/app/(pages)/(auth)/signIn/SignIn'
 export default function SignInModal() {
-  return <SingInPage />
+  return <SignIn />
 }

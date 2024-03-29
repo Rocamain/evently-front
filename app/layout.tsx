@@ -1,8 +1,9 @@
+import React from 'react'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header/Header'
-
+import AuthProvider from '@/lib/context/AuthProvider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -21,20 +22,22 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={inter.className + ' overscroll-none'}>
-        <Header />
-        <main id={'background-blob'} className="min-h-full">
-          {children}
-          {modal}
-        </main>
-        <footer
-          style={{
-            height: '25vh',
-            backgroundColor: 'black',
-            color: 'white',
-          }}
-        ></footer>
-      </body>
+      <AuthProvider>
+        <body className={inter.className + ' overscroll-none'}>
+          <Header />
+          <main id={'background-blob'} className="min-h-full">
+            {children}
+            {modal}
+          </main>
+          <footer
+            style={{
+              height: '25vh',
+              backgroundColor: 'black',
+              color: 'white',
+            }}
+          ></footer>
+        </body>
+      </AuthProvider>
     </html>
   )
 }

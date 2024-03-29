@@ -16,6 +16,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@heroicons/react": "^2.1.1",
     "@react-google-maps/api": "^2.19.3",
     "dotenv": "^16.4.5",
     "next": "14.1.0",
