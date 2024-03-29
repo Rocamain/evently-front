@@ -10,7 +10,6 @@ import React, {
 import { useRouter } from 'next/navigation'
 
 export default function Modal({ children }: { children: React.ReactNode }) {
-  const overlayRef = useRef<ElementRef<'div'>>(null)
   const dialogRef = useRef<ElementRef<'dialog'>>(null)
   const buttonRef = useRef<ElementRef<'button'>>(null)
   const router = useRouter()
@@ -71,21 +70,16 @@ export default function Modal({ children }: { children: React.ReactNode }) {
   return (
     <dialog
       ref={dialogRef}
-      className="rounded-md sm:border-solid sm:border-2 sm:border-gray-400 md:rounded-lg backdrop:bg-blue-800/30 backdrop:cursor-pointer"
+      className="relative shadow-lg rounded-3xl bg-red-800/30 backdrop:bg-red-800/30 backdrop:cursor-pointer overflow-visible"
       onClose={onDismiss}
       onClick={handleClick}
     >
-      <button
-        ref={buttonRef}
-        className="block ml-auto mr-2 p-2 text-xl text-gray-500"
-      >
-        ✖
-      </button>
-      <div className="px-10 pb-6">
-        <div className="sm:pt-10 sm:px-8 md:p-8 w-full md:border-solid md:border-2 md:border-gray-400 md:rounded-lg md:max-w-xl">
-          {children}
-        </div>
+      <div className="absolute top-4 right-[20px] z-50">
+        <button ref={buttonRef} className="text-xl text-gray-500">
+          ✖
+        </button>
       </div>
+      {children}
     </dialog>
   )
 }
