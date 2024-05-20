@@ -6,7 +6,6 @@
     "es2023": true
   },
   "extends": [
-    "standard",
     "eslint-config-prettier",
     "next",
     "next/core-web-vitals"
