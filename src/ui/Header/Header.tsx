@@ -1,10 +1,7 @@
-'use client'
 import Link from 'next/link'
 import NavBar from './NavBar/NavBar'
 import Image from 'next/image'
 import SearchBar from './SearchBar/SearchBar'
-import { useActionState } from 'react'
-import { signInUser } from '@/lib/actions/authActions'
 
 export default function Header() {
   return (
@@ -23,8 +20,10 @@ export default function Header() {
                 />
               </Link>
             </div>
+
             <SearchBar />
           </div>
+
           <NavBar />
         </div>
 
