@@ -1,19 +1,15 @@
 'use client'
 import { useFormState } from 'react-dom'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import {
   EnvelopeOpenIcon as MailIcon,
   KeyIcon as PasswordIcon,
 } from '@heroicons/react/24/outline'
-import SubmitButton from './SubmitButton'
-import { useAuth } from '@/lib/context/AuthProvider'
-import { SignInFormProps } from '@/types/auth/auth'
+import SubmitButton from '@/ui/buttons/SubmitButton/SubmitButton'
+import { AuthAction } from '@/types/auth/auth'
 
-type FormLoginProps = SignInFormProps
-
-export default function AuthForm({ formAction, initialState }: FormLoginProps) {
-  const [data, dispatch] = useFormState<any, FormData>(formAction, initialState)
-  const { updateAuthState, authState } = useAuth()
+export default function AuthForm({ action }: { action: AuthAction }) {
+  const [state, dispatch] = useFormState(action, undefined)
   const formRef = useRef<HTMLFormElement | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
   const messageRef = useRef<HTMLParagraphElement | null>(null)
@@ -26,17 +22,19 @@ export default function AuthForm({ formAction, initialState }: FormLoginProps) {
 
   useEffect(() => {
     if (formRef.current) {
-      if (data.message === 'Login successful') {
-        updateAuthState({ isAuthenticated: true, user: data.userInfo })
-      } else {
-        // updateUser(null)
+      if (state?.message === 'Login successful') {
+        formRef.current.reset()
       }
-      formRef.current.reset()
     }
-  }, [data])
+  }, [state])
 
   const handleChange = () => {
-    if (data.message) {
+    if (state?.errors) {
+      if (messageRef.current) messageRef.current.textContent = null
+      state.errors.email = undefined
+      state.errors.password = undefined
+    }
+    if (state?.message) {
       if (messageRef.current) messageRef.current.textContent = null
     }
   }
@@ -48,16 +46,15 @@ export default function AuthForm({ formAction, initialState }: FormLoginProps) {
       className="pt-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7"
     >
       <div className="flex content-center">
-        <label htmlFor="email" />
-        <div>
+        <label htmlFor="email" className="flex content-center mr-2">
           <MailIcon
             height="100%"
             width="38px"
-            color="black"
-            className="block mr-2"
+            color={state?.errors?.email?.[0] ? 'red' : 'black'}
+            className="block"
             title="Email icon"
           />
-        </div>
+        </label>
         <input
           ref={inputRef}
           autoComplete="off"
@@ -70,16 +67,15 @@ export default function AuthForm({ formAction, initialState }: FormLoginProps) {
         />
       </div>
       <div className="flex content-center">
-        <label htmlFor="password" />
-        <div>
+        <label htmlFor="password" className="flex content-center mr-2">
           <PasswordIcon
             height="100%"
             width="38px"
-            color="black"
-            className="block mr-2"
+            color={state?.errors?.password?.[0] ? 'red' : 'black'}
+            className="block"
             title="Password icon"
           />
-        </div>
+        </label>
         <input
           autoComplete="off"
           id="password"
@@ -91,11 +87,17 @@ export default function AuthForm({ formAction, initialState }: FormLoginProps) {
         />
       </div>
       <div>
-        <p ref={messageRef}>{data.message}</p>
+        <p ref={messageRef} className="h-[28px] ml-[46px] text-red-500">
+          {state?.errors?.email?.[0] ||
+            state?.errors?.password?.[0] ||
+            state?.message}
+        </p>
       </div>
-      <div className="pt-6">
+      <div className="absolute bottom-4">
         <div>
-          <SubmitButton />
+          <SubmitButton color="red" variant="contained">
+            Submit
+          </SubmitButton>
         </div>
       </div>
     </form>

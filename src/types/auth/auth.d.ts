@@ -19,28 +19,30 @@ export type AuthContext = {
   updateAuthState: React.Dispatch<React.SetStateAction<AuthState>>
 }
 
-export interface CustomError extends Error {
-  message: string
-}
+export type AuthActionState =
+  | {
+      errors?: {
+        name?: string[]
+        email?: string[]
+        password?: string[]
+      }
+      message?: string
+    }
+  | undefined
 
-type SignInState = {
-  message: string | null
-  userInfo: UserInfo | null
-}
-
-export interface AuthData {
-  message: string | undefined
-  error?: { message: string }
-  AccessToken?: string
-  RefreshToken?: string
-  ExpiresIn?: number
-  userInfo?: UserInfo
-}
-
-export type SignInFormProps = {
-  formAction: (
-    prevState: SignInState,
-    singInFormData: FormData,
-  ) => Promise<AuthData | CustomError>
-  initialState: SignInState
-}
+export type AuthAction = (
+  state: AuthActionState,
+  formData: FormData,
+) => Promise<
+  | {
+      errors: {
+        email?: string[] | undefined
+        password?: string[] | undefined
+      }
+      message: undefined
+    }
+  | {
+      errors: undefined
+      message: string
+    }
+>

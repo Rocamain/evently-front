@@ -1,6 +1,6 @@
 import FormHeader from '@/ui/auth/AuthForm/FormHeader'
 import AuthWrapper from '@/ui/auth/AuthWrapper'
-import { signInUser } from '@/lib/actions/authActions'
+import { signin } from '@/lib/auth/action'
 import AuthForm from '@/ui/auth/AuthForm/AuthForm'
 
 export const metadata = {
@@ -12,13 +12,7 @@ export default function SignInForm() {
   return (
     <AuthWrapper>
       <FormHeader title="Login to your account" withPicture />
-      <AuthForm
-        formAction={signInUser}
-        initialState={{
-          message: null,
-          userInfo: null,
-        }}
-      />
+      <AuthForm action={signin} />
     </AuthWrapper>
   )
 }
