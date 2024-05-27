@@ -22,9 +22,13 @@ export type AuthContext = {
 export type AuthActionState =
   | {
       errors?: {
+        name?: string[] | undefined
+        surname?: string[] | undefined
         name?: string[]
         email?: string[]
         password?: string[]
+        passwordConfirmation?: string[]
+        profilePicture?: string[] | undefined
       }
       message?: string
     }
@@ -36,8 +40,12 @@ export type AuthAction = (
 ) => Promise<
   | {
       errors: {
+        name?: string[] | undefined
+        surname?: string[] | undefined
         email?: string[] | undefined
         password?: string[] | undefined
+        passwordConfirmation?: string[]
+        profilePicture?: string[] | undefined
       }
       message: undefined
     }

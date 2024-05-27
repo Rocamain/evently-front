@@ -1,5 +1,6 @@
 'use client'
-import { useState, ChangeEvent } from 'react'
+import { useState, useEffect, ChangeEvent } from 'react'
+import { useRouter } from 'next/navigation'
 import FormHeader from '@/ui/auth/AuthForm/FormHeader'
 import AuthWrapper from '@/ui/auth/AuthWrapper'
 import { register } from '@/lib/auth/action'
@@ -12,13 +13,17 @@ import {
   CloudArrowUpIcon as ProfilePictureIcon,
 } from '@heroicons/react/24/outline'
 import SubmitButton from '@/ui/buttons/SubmitButton/SubmitButton'
+import LinkButton from '../buttons/LinkButton/LinkButton'
 
 export default function RegisterForm() {
   const [picturepreview, setPreview] = useState<null | string>(null)
   const { state, dispatch, formRef, inputRef, messageRef } = useAuthForm({
     action: register,
   })
-
+  const router = useRouter()
+  useEffect(() => {
+    if (state?.message === 'Register Successful') router.replace('/signin')
+  }, [state])
   const handleChange = () => {
     if (state?.errors) {
       if (messageRef.current) messageRef.current.textContent = null
@@ -46,8 +51,7 @@ export default function RegisterForm() {
       />
       <form
         ref={formRef}
-        // pending implementation
-        // action={dispatch}
+        action={dispatch}
         className="pt-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7"
       >
         <div className="flex content-center">
@@ -55,7 +59,7 @@ export default function RegisterForm() {
             <NameIcon
               height="100%"
               width="38px"
-              color={state?.errors?.email?.[0] ? 'red' : 'black'}
+              color={state?.errors?.name?.[0] ? 'red' : 'black'}
               className="block"
               title="Name icon"
             />
@@ -76,7 +80,7 @@ export default function RegisterForm() {
             <SurnameIcon
               height="100%"
               width="38px"
-              color={state?.errors?.email?.[0] ? 'red' : 'black'}
+              color={state?.errors?.surname?.[0] ? 'red' : 'black'}
               className="block"
               title="Surname icon"
             />
@@ -134,37 +138,62 @@ export default function RegisterForm() {
         </div>
         <div className="flex content-center">
           <label htmlFor="password" className="flex content-center mr-2">
-            <ProfilePictureIcon
+            <PasswordIcon
               height="100%"
               width="38px"
               color={state?.errors?.password?.[0] ? 'red' : 'black'}
+              className="block"
+              title="Password icon"
+            />
+          </label>
+          <input
+            autoComplete="off"
+            id="password confirmation"
+            name="password confirmation"
+            type="password"
+            className="flex-grow w-full h-12 sm:w-1/2 outline-none appearance-none  text-gray-600 p-3 pl-4 rounded-lg border border-gray-400 hover:border-gray-300 focus:border-red-400 hover:z-10 focus:z-10 placeholder:text-gray-500"
+            placeholder="Password confirmation"
+            onChange={handleChange}
+          />
+        </div>
+        <div className="flex content-center">
+          <label htmlFor="password" className="flex content-center mr-2">
+            <ProfilePictureIcon
+              height="100%"
+              width="38px"
+              color={state?.errors?.profilePicture?.[0] ? 'red' : 'black'}
               className="block"
               title="Profile picture icon"
             />
           </label>
           <input
             type="file"
+            id="profile picture"
+            name="profile picture"
             accept="image/*"
             className="flex-grow w-full h-12 sm:w-1/2 outline-none appearance-none  text-gray-600 p-3 pl-4"
             onChange={handlePreviewPic}
-            //   onChange={(e) => {
-            //     const selectedFile = e.target.files && (e.target.files[0] as File)
-            //     handleInput('profilePicture', selectedFile)
-            //   }}
           />
         </div>
         <div>
-          <p ref={messageRef} className="h-[28px] ml-[46px] text-red-500">
+          <p ref={messageRef} className="min-h-[28px] ml-[46px] text-red-500">
             {state?.errors?.email?.[0] ||
+              state?.errors?.name?.[0] ||
+              state?.errors?.surname?.[0] ||
               state?.errors?.password?.[0] ||
-              state?.message}
+              state?.errors?.passwordConfirmation?.[0] ||
+              state?.errors?.profilePicture?.[0]}
           </p>
         </div>
-        <div className="absolute bottom-4">
-          <div>
+        <div>
+          <div className="pl-[44px]">
             <SubmitButton color="red" variant="contained">
               Submit
             </SubmitButton>
+
+            <LinkButton href="/signin" variant="contained">
+              Login
+            </LinkButton>
           </div>
         </div>
       </form>
