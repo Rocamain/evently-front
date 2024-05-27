@@ -30,7 +30,7 @@ export default async function NavBar() {
               </LinkButton>
             </li>
             <li>
-              <LinkButton variant="contained" color="red" href="/signIn">
+              <LinkButton variant="contained" color="red" href="/signin">
                 Log in
               </LinkButton>
             </li>
