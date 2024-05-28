@@ -4,10 +4,6 @@ const ACCEPTED_FILE_TYPES = ['image/jpeg', 'image/webp']
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 10 // 10MB
 
 export const SigninFormSchema = z.object({
-  name: z
-    .string()
-    .min(4, { message: 'Name must be at least 4 characters long.' })
-    .trim(),
   email: z.string().email({ message: 'Please enter a valid email.' }).trim(),
   password: z.string().trim(),
 })
