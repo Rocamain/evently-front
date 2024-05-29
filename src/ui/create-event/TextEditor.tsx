@@ -1,14 +1,10 @@
 'use client'
 import './styles.css'
-import { useEffect } from 'react'
-
-// import { Color } from '@tiptap/extension-color'
-import ListItem from '@tiptap/extension-list-item'
-// import TextStyle from '@tiptap/extension-text-style'
-
-import { EditorProvider, useCurrentEditor } from '@tiptap/react'
+import { useEffect, useState } from 'react'
+import { Editor, EditorProvider, useCurrentEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import React from 'react'
+import StepButtons from './StepButtons'
 
 const MenuBar = () => {
   const { editor } = useCurrentEditor()
@@ -90,6 +86,36 @@ const MenuBar = () => {
   )
 }
 
+const ButtonsBar = ({
+  handleBack,
+  handleNext,
+  isFirstStep,
+  isLastStep,
+}: {
+  handleBack: () => void
+  handleNext: () => void
+  isFirstStep: boolean
+  isLastStep: boolean
+}) => {
+  const { editor } = useCurrentEditor()
+  if (!editor) {
+    return null
+  }
+
+  useEffect(() => {
+    console.log(editor.getHTML())
+  }, [editor.getText()])
+
+  return (
+    <StepButtons
+      isFirstStep={isFirstStep}
+      isLastStep={isLastStep}
+      handleNext={handleNext}
+      handleBack={handleBack}
+    />
+  )
+}
+
 const extensions = [
   StarterKit.configure({
     bulletList: {
@@ -102,12 +128,32 @@ const extensions = [
     },
   }),
 ]
+const handleUpdate = ({ editor }: { editor: Editor }) => {
+  console.log(editor.getText())
+}
 
-export default ({ Buttons }: { Buttons: React.ReactNode }) => {
+export default ({
+  handleBack,
+  handleNext,
+  isFirstStep,
+  isLastStep,
+}: {
+  handleBack: () => void
+  handleNext: () => void
+  isFirstStep: boolean
+  isLastStep: boolean
+}) => {
   return (
     <EditorProvider
       slotBefore={<MenuBar />}
-      children={Buttons}
+      slotAfter={
+        <ButtonsBar
+          isFirstStep={isFirstStep}
+          isLastStep={isLastStep}
+          handleNext={handleNext}
+          handleBack={handleBack}
+        />
+      }
       extensions={extensions}
       content={''}
     ></EditorProvider>
