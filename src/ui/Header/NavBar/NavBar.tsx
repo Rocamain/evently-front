@@ -17,6 +17,11 @@ export default async function NavBar() {
               </LinkButton>
             </li>
             <li>
+              <LinkButton variant="contained" href="/create-event">
+                Create Event
+              </LinkButton>
+            </li>
+            <li>
               <form action={logout}>
                 <SubmitButton color="red">Logout</SubmitButton>
               </form>

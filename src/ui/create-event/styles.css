@@ -1,0 +1,22 @@
+h5 {
+  font-size: 1.25rem;
+}
+h6 {
+  font-size: 1.1rem;
+}
+.tiptap {
+  margin-top: 1rem;
+  min-height: 50px;
+}
+,
+tiptap:hover {
+  border: 1px solid cyan;
+}
+tiptap:focus {
+  border: 1px solid green;
+}
+
+ul,
+li {
+  list-style-type: circle;
+}
