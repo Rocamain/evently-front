@@ -20,9 +20,7 @@ interface Place {
   lng?: number
 }
 
-export default function PlacesAutoCompleteInput({
-  isSmallScreen = false,
-}: AutoCompletePlacesProps) {
+export default function PlacesAutoCompleteInput() {
   const [placeSelected, setPlaceSelected] = useState<Place | null>(null)
   const [show, setShow] = useState(false)
   const [inputValue, setInputValue] = useState<string>('')
@@ -120,8 +118,11 @@ export default function PlacesAutoCompleteInput({
   return (
     <div className="relative flex-grow sm:w-1/2 outline-none">
       <div className="sticky top-0 flex items-center outline-none">
+        <label htmlFor="EventLocation" className="sr-only">
+          Events location
+        </label>
         <input
-          name="autocompleteText"
+          name="EventLocation"
           type="text"
           autoComplete="off"
           placeholder="City, postcode ..."

@@ -1,10 +1,10 @@
 'use client'
-import './styles.css'
-import { useEffect, useState } from 'react'
+import './styles.module.css'
+import { useEffect, useRef } from 'react'
 import { Editor, EditorProvider, useCurrentEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import React from 'react'
-import StepButtons from './StepButtons'
+import StepButtons from '../../StepButtons'
 
 const MenuBar = () => {
   const { editor } = useCurrentEditor()
@@ -23,8 +23,8 @@ const MenuBar = () => {
         disabled={!editor.can().chain().focus().toggleBold().run()}
         className={
           editor.isActive('bold')
-            ? 'bg-cyan-200 hover:bg-red-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
-            : 'bg-gray-200 hover:bg-cyan-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            ? 'bg-teal-200 hover:bg-red-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            : 'bg-gray-200 hover:bg-teal-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
         }
       >
         Bold
@@ -34,8 +34,8 @@ const MenuBar = () => {
         disabled={!editor.can().chain().focus().toggleItalic().run()}
         className={
           editor.isActive('italic')
-            ? 'bg-cyan-200 hover:bg-red-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
-            : 'bg-gray-200 hover:bg-cyan-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            ? 'bg-teal-200 hover:bg-red-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            : 'bg-gray-200 hover:bg-teal-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
         }
       >
         Italic
@@ -97,22 +97,29 @@ const ButtonsBar = ({
   isFirstStep: boolean
   isLastStep: boolean
 }) => {
+  const inputRef = useRef<null | HTMLInputElement>(null)
   const { editor } = useCurrentEditor()
   if (!editor) {
     return null
   }
-
-  useEffect(() => {
-    console.log(editor.getHTML())
-  }, [editor.getText()])
-
+  useEffect(() => {}, [editor.state, inputRef])
   return (
-    <StepButtons
-      isFirstStep={isFirstStep}
-      isLastStep={isLastStep}
-      handleNext={handleNext}
-      handleBack={handleBack}
-    />
+    <>
+      <label htmlFor="EventDescription" className="sr-only" />
+      <input ref={inputRef} name="EventDescription" className="sr-only" />
+      <StepButtons
+        isFirstStep={isFirstStep}
+        isLastStep={isLastStep}
+        handleNext={() => {
+          if (inputRef.current) {
+            console.log(editor.getHTML())
+            inputRef.current.value = editor.getText()
+          }
+          handleNext()
+        }}
+        handleBack={handleBack}
+      />
+    </>
   )
 }
 
@@ -128,9 +135,6 @@ const extensions = [
     },
   }),
 ]
-const handleUpdate = ({ editor }: { editor: Editor }) => {
-  console.log(editor.getText())
-}
 
 export default ({
   handleBack,

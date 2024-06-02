@@ -12,19 +12,35 @@ export default function StepButtons({
   return (
     <div className="flex justify-between">
       <button
-        onClick={handleBack}
+        onClick={(e) => {
+          e.preventDefault()
+          handleBack()
+        }}
         disabled={isFirstStep}
-        className={`px-4 py-2 rounded ${isFirstStep ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+        className={`px-4 py-2 rounded ${isFirstStep ? 'bg-gray-300 font-semibold text-gray-500 cursor-not-allowed' : 'bg-red-500 font-semibold text-white hover:bg-teal-600'}`}
       >
         Back
       </button>
-      <button
-        onClick={handleNext}
-        disabled={isLastStep}
-        className={`px-4 py-2 rounded ${isLastStep ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
-      >
-        Continue
-      </button>
+      {isLastStep && (
+        <button
+          type="submit"
+          className="px-4 py-2 rounded bg-teal-500 font-semibold text-white hover:bg-teal-600'"
+        >
+          Preview
+        </button>
+      )}
+      {!isLastStep && (
+        <button
+          onClick={(e) => {
+            e.preventDefault()
+            handleNext()
+          }}
+          disabled={isLastStep}
+          className={`px-4 py-2 rounded ${isLastStep ? 'bg-gray-300 font-semibold text-gray-500 cursor-not-allowed' : 'bg-teal-500 font-semibold text-white hover:bg-teal-600'}`}
+        >
+          Continue
+        </button>
+      )}
     </div>
   )
 }

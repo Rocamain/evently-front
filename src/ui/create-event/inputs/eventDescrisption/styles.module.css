@@ -1,22 +1,21 @@
-h5 {
+h5.tiptap {
   font-size: 1.25rem;
 }
-h6 {
+h6.tiptap {
   font-size: 1.1rem;
 }
 .tiptap {
   margin-top: 1rem;
   min-height: 50px;
 }
-,
-tiptap:hover {
+
+.tiptap:hover {
   border: 1px solid cyan;
 }
-tiptap:focus {
+.tiptap:focus {
   border: 1px solid green;
 }
 
-ul,
-li {
+ul.tiptap {
   list-style-type: circle;
 }
