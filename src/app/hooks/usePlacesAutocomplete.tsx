@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 'use client'
-import { useState, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService'
 import { EventLocation } from '@/types/event/event'
 
@@ -26,6 +26,7 @@ export const usePlacesAutoComplete = () => {
       placeId: string,
       description: string,
     ) => {
+      event.preventDefault()
       if (!isPlacePredictionsLoading) {
         setShow(false)
         setInputValue(description)
@@ -48,9 +49,7 @@ export const usePlacesAutoComplete = () => {
             ) {
               const lat = placeDetails.geometry.location.lat()
               const lng = placeDetails.geometry.location.lng()
-              const address = placeDetails.address_components.map(
-                ({ short_name, types }) => ({ info: short_name, types }),
-              )
+              const address = placeDetails.address_components
 
               setPlaceSelected({
                 id: placeDetails.place_id,
@@ -80,16 +79,21 @@ export const usePlacesAutoComplete = () => {
     [getPlacePredictions],
   )
 
-  const handleInputFocus = useCallback(() => {
-    if (inputValue) {
-      setInputValue('')
-    }
-  }, [inputValue])
+  const handleInputFocus = useCallback(
+    (event: React.FocusEvent<HTMLInputElement>) => {
+      event.preventDefault()
+      if (inputValue) {
+        setInputValue('')
+      }
+    },
+    [inputValue],
+  )
 
   const handleInputBlur = useCallback(
-    (e: React.FocusEvent<HTMLInputElement>) => {
-      if (!e.relatedTarget) setShow(false)
-      if (e.relatedTarget?.id === 'SearchByWordsInput') {
+    (event: React.FocusEvent<HTMLInputElement>) => {
+      event.preventDefault()
+      if (!event.relatedTarget) setShow(false)
+      if (event.relatedTarget?.id === 'SearchByWordsInput') {
         setShow(false)
       }
     },
