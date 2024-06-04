@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 'use client'
+
 import { useState } from 'react'
 import { usePlacesAutoComplete } from '@/app/hooks/usePlacesAutocomplete'
 
@@ -21,8 +22,11 @@ export default function PlacesAutoCompleteInput() {
   return (
     <div className="relative flex-grow sm:w-1/2 outline-none">
       <div className="sticky top-0 flex items-center outline-none">
+        <label htmlFor="EventLocation" className="sr-only">
+          Events location
+        </label>
         <input
-          name="autocompleteText"
+          name="EventLocation"
           type="text"
           autoComplete="off"
           placeholder="City, postcode ..."
