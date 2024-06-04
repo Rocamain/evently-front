@@ -23,7 +23,7 @@ export default function RegisterForm() {
   const router = useRouter()
   useEffect(() => {
     if (state?.message === 'Register Successful') router.replace('/signin')
-  }, [state])
+  }, [state, router])
   const handleChange = () => {
     if (state?.errors) {
       if (messageRef.current) messageRef.current.textContent = null

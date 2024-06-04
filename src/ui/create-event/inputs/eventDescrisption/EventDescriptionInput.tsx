@@ -4,17 +4,18 @@ import { useEffect, useRef } from 'react'
 import { Editor, EditorProvider, useCurrentEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import React from 'react'
-import StepButtons from '../../StepButtons'
+import StepButtons from '../../buttons/StepButtons'
 
 const MenuBar = () => {
   const { editor } = useCurrentEditor()
 
+  useEffect(() => {
+    if (editor) editor.commands.focus('start')
+  }, [editor])
+
   if (!editor) {
     return null
   }
-  useEffect(() => {
-    editor.commands.focus('start')
-  }, [])
 
   return (
     <div>
@@ -102,7 +103,7 @@ const ButtonsBar = ({
   if (!editor) {
     return null
   }
-  useEffect(() => {}, [editor.state, inputRef])
+
   return (
     <>
       <label htmlFor="EventDescription" className="sr-only" />
@@ -112,7 +113,6 @@ const ButtonsBar = ({
         isLastStep={isLastStep}
         handleNext={() => {
           if (inputRef.current) {
-            console.log(editor.getHTML())
             inputRef.current.value = editor.getText()
           }
           handleNext()
@@ -136,7 +136,7 @@ const extensions = [
   }),
 ]
 
-export default ({
+export default function EventDescriptionInput({
   handleBack,
   handleNext,
   isFirstStep,
@@ -146,7 +146,7 @@ export default ({
   handleNext: () => void
   isFirstStep: boolean
   isLastStep: boolean
-}) => {
+}) {
   return (
     <EditorProvider
       slotBefore={<MenuBar />}

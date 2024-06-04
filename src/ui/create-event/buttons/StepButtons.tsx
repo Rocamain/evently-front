@@ -1,3 +1,7 @@
+import SubmitButton from './SubmitButton'
+
+function submitButton() {}
+
 export default function StepButtons({
   handleBack,
   handleNext,
@@ -21,14 +25,7 @@ export default function StepButtons({
       >
         Back
       </button>
-      {isLastStep && (
-        <button
-          type="submit"
-          className="px-4 py-2 rounded bg-teal-500 font-semibold text-white hover:bg-teal-600'"
-        >
-          Preview
-        </button>
-      )}
+      {isLastStep && <SubmitButton />}
       {!isLastStep && (
         <button
           onClick={(e) => {

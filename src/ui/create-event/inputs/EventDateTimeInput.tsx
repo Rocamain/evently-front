@@ -1,13 +1,19 @@
-export default function EventDateTimeInput() {
+export default function EventDateTimeInput({ error }: { error?: string[] }) {
+  console.log('EventDateTimeInput', { error })
   return (
     <div>
       <fieldset>
-        <legend className="mb-4 font-bold">Set a Time and a Date</legend>
+        <legend className="mb-4 font-bold">
+          Set a Time and a Date Event Time
+          {error && (
+            <span className="text-red-500 cursor-pointer" title={error[0]}>
+              *
+            </span>
+          )}
+        </legend>
         <div className="flex gap-4">
           <div className="relative w-[100px]">
-            <label htmlFor="EventTime" className="sr-only">
-              Event Time
-            </label>
+            <label htmlFor="EventTime" className="sr-only"></label>
             <div className="absolute inset-y-0 start-2 top-0 flex items-center ps-0.5 pointer-events-none">
               <svg
                 className="w-4 h-4 text-gray-500 dark:text-gray-400"

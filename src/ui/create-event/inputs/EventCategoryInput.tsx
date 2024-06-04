@@ -1,21 +1,17 @@
-export default function EventCategoryInput() {
-  const categories = [
-    'Social',
-    'Tech',
-    'Cooking',
-    'Sport',
-    'Games',
-    'Professional',
-    'Hikes',
-    'Travel',
-    'Other',
-  ]
-
+import { eventCategories } from '@/lib/create-event/utils'
+export default function EventCategoryInput({ error }: { error?: string[] }) {
   return (
     <fieldset className="ml-6 mb-6">
-      <legend className="mb-4 font-bold">Choose a category</legend>
+      <legend className="mb-4 font-bold">
+        Choose a category
+        {error && (
+          <span className="text-red-500 cursor-pointer" title={error[0]}>
+            *
+          </span>
+        )}
+      </legend>
       <div className="grid grid-cols-4 gap-4 w-[500px]">
-        {categories.map((category) => (
+        {eventCategories.map((category) => (
           <div className="flex items-center" key={category}>
             <input
               type="radio"
