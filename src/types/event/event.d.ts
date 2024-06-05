@@ -3,7 +3,7 @@ export interface EventAddressInfo {
   types: string[]
 }
 
-export interface EventLocation {
+interface EventLocation {
   id: string
   name?: string
   address?: google.maps.GeocoderAddressComponent[]
@@ -12,13 +12,15 @@ export interface EventLocation {
 }
 
 export interface ValidationErrors {
-  EventTitle?: string[] | undefined
-  EventLink?: string[] | undefined
-  EventLocation?: string[] | undefined
-  EventCategory?: string[] | undefined
-  EventPrice?: string[] | undefined
-  EventTime?: string[] | undefined
-  EventDate?: string[] | undefined
+  eventTitle?: string[] | undefined
+  eventLink?: string[] | undefined
+  eventLocation?: string[] | undefined
+  eventCategory?: string[] | undefined
+  eventPrice?: string[] | undefined
+  eventTime?: string[] | undefined
+  eventDate?: string[] | undefined
+  eventDescription?: string[] | undefined
+  eventPictures?: string[] | undefined
 }
 
 export type CreateEventState =

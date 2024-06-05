@@ -12,14 +12,14 @@ export default function EventGeneralInfoInputs({
 }) {
   return (
     <div>
-      <EventTitleInput error={validationErrors?.EventTitle} />
-      <EventLinkInput error={validationErrors?.EventLink} />
-      <EventLocationInput error={validationErrors?.EventLocation} />
-      <EventCategoryInput error={validationErrors?.EventCategory} />
+      <EventTitleInput error={validationErrors?.eventTitle} />
+      <EventLinkInput error={validationErrors?.eventLink} />
+      <EventLocationInput error={validationErrors?.eventLocation} />
+      <EventCategoryInput error={validationErrors?.eventCategory} />
       <div className="flex gap-8 ml-6 mb-6">
-        <EventPriceInput error={validationErrors?.EventPrice} />
+        <EventPriceInput error={validationErrors?.eventPrice} />
         <EventDateTimeInput
-          error={validationErrors?.EventTime || validationErrors?.EventDate}
+          error={validationErrors?.eventTime || validationErrors?.eventDate}
         />
       </div>
     </div>

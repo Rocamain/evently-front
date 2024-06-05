@@ -29,7 +29,7 @@ export default function EventLocationInput({ error }: { error?: string[] }) {
           type="text"
           autoComplete="off"
           placeholder="City, postcode ..."
-          className="mt-2 w-full p-2 border border-gray-300 rounded-md"
+          className="mt-2 w-full p-2 border border-gray-300 font-medium rounded-md"
           onChange={handleInputChange}
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}

@@ -1,12 +1,11 @@
 'use client'
-import './styles.module.css'
 import { useEffect, useRef } from 'react'
 import { Editor, EditorProvider, useCurrentEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import React from 'react'
 import StepButtons from '../../buttons/StepButtons'
 
-const MenuBar = () => {
+const MenuBar = ({ error }: { error?: string[] }) => {
   const { editor } = useCurrentEditor()
 
   useEffect(() => {
@@ -18,14 +17,14 @@ const MenuBar = () => {
   }
 
   return (
-    <div>
+    <div className="flex gap-2 relative">
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={!editor.can().chain().focus().toggleBold().run()}
         className={
           editor.isActive('bold')
-            ? 'bg-teal-200 hover:bg-red-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
-            : 'bg-gray-200 hover:bg-teal-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            ? 'bg-gray-400/75 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            : 'bg-gray-200 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
         }
       >
         Bold
@@ -35,8 +34,8 @@ const MenuBar = () => {
         disabled={!editor.can().chain().focus().toggleItalic().run()}
         className={
           editor.isActive('italic')
-            ? 'bg-teal-200 hover:bg-red-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
-            : 'bg-gray-200 hover:bg-teal-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            ? 'bg-gray-400/75 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            : 'bg-gray-200 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
         }
       >
         Italic
@@ -46,43 +45,48 @@ const MenuBar = () => {
         onClick={() => editor.chain().focus().setParagraph().run()}
         className={
           editor.isActive('paragraph')
-            ? 'bg-cyan-200 hover:bg-red-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
-            : 'bg-gray-200 hover:bg-cyan-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            ? 'bg-gray-400/75 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            : 'bg-gray-200 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
         }
       >
-        paragraph
+        Paragraph
       </button>
 
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
         className={
           editor.isActive('heading', { level: 5 })
-            ? 'bg-cyan-200 hover:bg-red-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
-            : 'bg-gray-200 hover:bg-cyan-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            ? 'bg-gray-400/75 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            : 'bg-gray-200 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
         }
       >
-        Title 1
+        Header 1
       </button>
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
         className={
           editor.isActive('heading', { level: 6 })
-            ? 'bg-cyan-200 hover:bg-red-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
-            : 'bg-gray-200 hover:bg-cyan-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            ? 'bg-gray-400/75 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            : 'bg-gray-200 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
         }
       >
-        Title 2
+        Header 2
       </button>
       <button
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={
           editor.isActive('bulletList')
-            ? 'bg-cyan-200 hover:bg-red-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
-            : 'bg-gray-200 hover:bg-cyan-200 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            ? 'bg-gray-400/75 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
+            : 'bg-gray-200 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
         }
       >
         List
       </button>
+      {error && (
+        <span className="text-red-500 cursor-pointer" title={error[0]}>
+          *
+        </span>
+      )}
     </div>
   )
 }
@@ -137,11 +141,13 @@ const extensions = [
 ]
 
 export default function EventDescriptionInput({
+  error,
   handleBack,
   handleNext,
   isFirstStep,
   isLastStep,
 }: {
+  error?: string[]
   handleBack: () => void
   handleNext: () => void
   isFirstStep: boolean
@@ -149,7 +155,7 @@ export default function EventDescriptionInput({
 }) {
   return (
     <EditorProvider
-      slotBefore={<MenuBar />}
+      slotBefore={<MenuBar error={error} />}
       slotAfter={
         <ButtonsBar
           isFirstStep={isFirstStep}

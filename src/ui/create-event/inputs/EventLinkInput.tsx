@@ -14,7 +14,7 @@ export default function EventLinkInput({ error }: { error?: string[] }) {
         name="EventLink"
         pattern=".*"
         placeholder={'https://example.com'}
-        className="mt-2 w-full p-2 border border-gray-300 rounded-md"
+        className="mt-2 w-full p-2 border border-gray-300 font-medium rounded-md"
       />
     </div>
   )
