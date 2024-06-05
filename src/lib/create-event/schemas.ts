@@ -1,59 +1,36 @@
 import { z } from 'zod'
-import { eventCategories } from './utils'
+
+// Define the address component schema
+const AddressComponentSchema = z.object({
+  long_name: z.string(),
+  short_name: z.string(),
+  types: z.array(z.string()),
+})
+
+// Define the EventLocation schema
+const EventLocationSchema = z.object({
+  id: z.string(),
+  name: z.string().optional(),
+  address: z.array(AddressComponentSchema).optional(),
+  lat: z.number().optional(),
+  lng: z.number().optional(),
+})
+
+// Custom validation for FileList
+const FileListSchema = z.custom<FileList>().refine((files) => {
+  return Array.from(files ?? []).length !== 0
+}, 'Image is required')
 
 export const CreateEventSchema = z.object({
-  EventTitle: z
-    .string({ message: 'Event title is required.' })
-    .min(8, { message: 'Event title must be at least 8 characters long.' })
-    .trim(),
-  EventLink: z
-    .string({ message: 'Event link is required.' })
-    .url({ message: 'Event link must be an url.' })
-    .trim(),
-  EventLocation: z.object(
-    {
-      id: z.string({ message: 'Event location is required.' }),
-      name: z.string({ message: 'Event location is required.' }),
-      address: z.array(
-        z.object({
-          long_name: z.string({
-            message: 'Event location does not meet the criteria.',
-          }),
-
-          short_name: z.string({
-            message: 'Event location does not meet the criteria.',
-          }),
-          types: z
-            .string({ message: 'Event location does not meet the criteria.' })
-            .array(),
-        }),
-      ),
-      lat: z.number({ message: 'Event location does not meet the criteria.' }),
-      lng: z.number({ message: 'Event location does not meet the criteria.' }),
-    },
-    { message: 'Event location is required.' },
-  ),
-  EventCategory: z
-    .string({
-      message: 'You have to choose one of the event categories listed.',
-    })
-    .refine(
-      (category) => {
-        return !eventCategories.includes(category)
-      },
-      {
-        message: 'You have to choose one of the event categories listed.',
-        path: ['EventCategory'],
-      },
-    ),
-  EventPrice: z.coerce
-    .number({ message: 'Price must number' })
-    .gte(0, { message: 'Price must greater then 0' }),
-  EventTime: z.string().time(),
-  EventDate: z.date().refine(
-    (date) => {
-      return date > new Date(Date.now())
-    },
-    { message: 'The date must be before today', path: ['EventDate'] },
-  ),
+  eventTitle: z.string().min(1, 'Event title is required'),
+  eventLink: z.string().url('Invalid URL'),
+  eventLocation: EventLocationSchema.or(z.literal('')),
+  eventCategory: z.string().min(1, 'Event category is required'),
+  eventPrice: z.number().min(0, 'Event price must be a positive number'),
+  eventTime: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, 'Invalid time format'),
+  eventDate: z.date(),
+  eventDescription: z.string().min(1, 'Event description is required'),
+  eventPictures: FileListSchema,
 })
