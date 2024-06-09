@@ -1,5 +1,4 @@
 export default function EventDateTimeInput({ error }: { error?: string[] }) {
-  console.log('EventDateTimeInput', { error })
   return (
     <div>
       <fieldset>
@@ -32,7 +31,7 @@ export default function EventDateTimeInput({ error }: { error?: string[] }) {
             <input
               type="time"
               name="EventTime"
-              className="pl-8 bg-gray-100 border rounded-md leading-none border-gray-300 font-medium text-md focus:ring-red-500 focus:border-red-500 block w-full py-2 px-2.5"
+              className="pl-8 cursor-text bg-gray-100 border rounded-md leading-none border-gray-300 font-medium text-md focus:ring-red-500 focus:border-red-500 block w-full py-2 px-2.5"
               defaultValue="00:00"
             />
           </div>
@@ -43,7 +42,7 @@ export default function EventDateTimeInput({ error }: { error?: string[] }) {
             <input
               type="date"
               name="EventDate"
-              className="bg-gray-100 border rounded-md leading-none border-gray-300 font-medium text-md focus:ring-red-500 focus:border-red-500 block w-full py-2 px-2.5"
+              className="cursor-text bg-gray-100 border rounded-md leading-none border-gray-300 font-medium text-md focus:ring-red-500 focus:border-red-500 block w-full py-2 px-2.5"
               defaultValue={new Date().toISOString().split('T')[0]}
             />
           </div>

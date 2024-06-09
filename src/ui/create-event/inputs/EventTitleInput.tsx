@@ -10,7 +10,7 @@ export default function EventTitleInput({ error }: { error?: string[] }) {
         )}
       </label>
       <input
-        className="mt-2 w-full p-2 border border-gray-300 rounded-md"
+        className="mt-2 w-full font-medium p-2 border border-gray-300 rounded-md"
         type="text"
         placeholder="Event Title"
         name="EventTitle"

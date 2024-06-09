@@ -49,7 +49,7 @@ export default function EventPriceInput({ error }: { error?: string[] }) {
           name="EventPrice"
           id="price"
           className="block w-[90px] bg-gray-100 border rounded-md py-1.5 pl-2.5 pr-2 font-medium placeholder:text-gray-500"
-          placeholder="0.00"
+          defaultValue="0.00"
           aria-describedby="price-currency"
           onKeyDown={handleKeyDown}
           step="0.01"

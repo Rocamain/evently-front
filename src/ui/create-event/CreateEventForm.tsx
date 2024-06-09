@@ -13,8 +13,8 @@ import EventDescriptionInput from './inputs/eventDescrisption/EventDescriptionIn
 import StepButtons from '@/ui/create-event/buttons/StepButtons'
 import { CreateEventAction } from '@/lib/create-event/actions'
 import { useFormState } from 'react-dom'
-import { ValidationErrors } from '@/types/event/event'
-import { CreateEventState } from '@/types/event/event'
+import { ValidationErrors, CreateEventState } from '@/types/event/event'
+import EventPicturesInput from './inputs/EventPicturesInput'
 
 const steps = [
   {
@@ -42,18 +42,7 @@ const steps = [
     label: '4',
     title: 'Add Pictures',
     content: ({ errors }: { errors?: ValidationErrors }) => (
-      <>
-        <label htmlFor="EventPictures" className="sr-only">
-          Upload some event pictures
-        </label>
-        <input
-          name="EventPictures"
-          type="file"
-          accept="image/*"
-          multiple
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-      </>
+      <EventPicturesInput />
     ),
     icon: <PhotoIcon className="w-16 h-16 text-red-400" />,
   },
@@ -115,6 +104,7 @@ export default function CreateEventForm() {
               <div className="mb-4">
                 {step.textEditor ? (
                   <EventDescriptionInput
+                    error={state?.errors?.eventDescription}
                     isFirstStep={currentStep === 0}
                     isLastStep={currentStep === steps.length - 1}
                     handleBack={handleBack}
