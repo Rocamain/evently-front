@@ -1,13 +1,11 @@
 import { z } from 'zod'
 
-// Define the address component schema
 const AddressComponentSchema = z.object({
   long_name: z.string(),
   short_name: z.string(),
   types: z.array(z.string()),
 })
 
-// Define the EventLocation schema
 const EventLocationSchema = z.object({
   id: z.string(),
   name: z.string().optional(),
@@ -16,10 +14,7 @@ const EventLocationSchema = z.object({
   lng: z.number().optional(),
 })
 
-// Custom validation for FileList
-const FileListSchema = z.custom<FileList>().refine((files) => {
-  return Array.from(files ?? []).length !== 0
-}, 'Image is required')
+const FileArraySchema = z.array(z.instanceof(File))
 
 export const CreateEventSchema = z.object({
   eventTitle: z.string().min(1, 'Event title is required'),
@@ -32,5 +27,5 @@ export const CreateEventSchema = z.object({
     .regex(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, 'Invalid time format'),
   eventDate: z.date(),
   eventDescription: z.string().min(1, 'Event description is required'),
-  eventPictures: FileListSchema,
+  eventPictures: FileArraySchema,
 })

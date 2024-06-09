@@ -1,14 +1,22 @@
 'use server'
-
 import { EventLocation } from '@/types/event/event'
 import { CreateEventSchema } from './schemas'
 import { CreateEventState } from '@/types/event/event'
+import { decryptSessionCookie, verifySession } from '../auth/session'
+import { redirect } from 'next/navigation'
+
 const { DB_URL } = process.env
 
 export async function CreateEventAction(
   state: CreateEventState,
   formData: FormData,
 ) {
+  const isVerified = await verifySession()
+
+  if (!isVerified) {
+    redirect('/signin')
+  }
+
   const eventTitle = formData.get('EventTitle') as string
   const eventLink = formData.get('EventLink') as string
   const eventLocation = formData.get('EventLocation') as string
@@ -17,8 +25,9 @@ export async function CreateEventAction(
   const eventTime = formData.get('EventTime') as string
   const eventDate = formData.get('EventDate') as string
   const eventDescription = formData.get('EventDescription') as string
+  const files = formData.getAll('eventPictures')
 
-  const parsedEventLocation = eventLocation
+  const parsedEventLocation = eventLocation.length
     ? (JSON.parse(eventLocation) as EventLocation)
     : ''
 
@@ -28,14 +37,15 @@ export async function CreateEventAction(
     eventLocation: parsedEventLocation,
     eventCategory,
     eventPrice,
-    eventTime: eventTime + ':00', // Ensuring time format is HH:mm:ss
+    eventTime: `${eventTime}:00`, // Ensuring time format is HH:mm:ss
     eventDate: new Date(eventDate),
     eventDescription,
-    eventPictures: 'Files',
+    eventPictures: files,
   }
+
   try {
     const validatedFields = CreateEventSchema.safeParse(data)
-    console.log({ validatedFields })
+
     if (!validatedFields.success) {
       return {
         errors: validatedFields.error.flatten().fieldErrors,
@@ -43,9 +53,21 @@ export async function CreateEventAction(
       }
     }
 
+    const session = await decryptSessionCookie()
+
+    const response = await fetch(`${DB_URL}/getuser`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${session.accessToken}`,
+      },
+    })
+    if (response.status !== 200) {
+      redirect('/signin')
+    }
+    const user = await response.json()
+
     return { errors: undefined, message: 'Event created' }
   } catch (error) {
-    console.log({ error })
     return { errors: undefined, message: 'Event creation Unsuccessful' }
   }
 }
