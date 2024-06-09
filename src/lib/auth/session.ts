@@ -1,8 +1,6 @@
 import 'server-only'
 import { cookies } from 'next/headers'
 import { SignJWT, jwtVerify, JWTPayload } from 'jose'
-import { verify } from 'crypto'
-
 const secretKey = process.env.SESSION_SECRET
 const encodedKey = new TextEncoder().encode(secretKey)
 
@@ -27,19 +25,19 @@ export async function decrypt(session: string | undefined = '') {
     })
     return payload
   } catch (error) {
-    console.log('Failed to verify session')
+    throw error
   }
 }
 
 export async function createSession(accessToken: string, expires: number) {
   const expiresAt = new Date(Date.now() + expires * 1000)
   const session = await encrypt({ accessToken, expiresAt })
-
+  console.log({ session })
   cookies().set('session', session, {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === 'production',
     expires: expiresAt,
-    sameSite: 'lax',
+    sameSite: 'strict',
     path: '/',
   })
 }
@@ -50,10 +48,21 @@ export function deleteSession() {
 
 export async function verifySession() {
   const cookie = cookies().get('session')?.value
+  if (!cookie) {
+    return false
+  }
   const session = await decrypt(cookie)
 
   if (session?.accessToken) {
     return true
   }
   return false
+}
+
+export async function decryptSessionCookie() {
+  const cookie = cookies().get('session')?.value
+  //
+  const session = await decrypt(cookie)
+
+  return session
 }
