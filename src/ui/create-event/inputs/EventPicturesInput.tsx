@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useRef } from 'react'
 
 const MAX_IMAGES = 5
@@ -5,14 +6,11 @@ const MAX_IMAGES = 5
 interface ImageUpload {
   file: File
   previewUrl: string
-  inputRef: React.RefObject<HTMLInputElement>
 }
 
 const EventPicturesInput: React.FC = () => {
   const [images, setImages] = useState<ImageUpload[]>([])
-  const inputFileRefs = Array.from({ length: MAX_IMAGES }).map(() =>
-    useRef<HTMLInputElement>(null),
-  )
+  const inputFileRef = useRef<HTMLInputElement>(null)
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
@@ -20,22 +18,20 @@ const EventPicturesInput: React.FC = () => {
     handleFiles(files)
   }
 
-  const handleFileInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number,
-  ) => {
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
-    handleFiles(files, index)
+    handleFiles(files)
   }
 
-  const handleFiles = (files: FileList | null, index?: number) => {
+  const handleFiles = (files: FileList | null) => {
     if (files) {
       const newImages: ImageUpload[] = Array.from(files).map((file) => ({
         file,
         previewUrl: URL.createObjectURL(file),
-        inputRef: inputFileRefs[index ?? 0],
       }))
-      setImages((prevImages) => [...prevImages, ...newImages])
+      setImages((prevImages) =>
+        [...prevImages, ...newImages].slice(0, MAX_IMAGES),
+      )
     }
   }
 
@@ -50,24 +46,18 @@ const EventPicturesInput: React.FC = () => {
     <div className="flex flex-col items-center justify-center">
       <div
         className="border-dashed border-2 border-gray-300 p-4 m-4 rounded-lg cursor-pointer"
-        onClick={() => inputFileRefs[images.length]?.current?.click()}
+        onClick={() => inputFileRef.current?.click()}
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
       >
         <input
-          id={`fileInput${images.length}`}
           type="file"
           className="hidden"
+          name="eventPictures"
           accept="image/*"
-          ref={inputFileRefs[images.length]}
-          onChange={(e) => {
-            e.preventDefault()
-            if (images.length < MAX_IMAGES) {
-              handleFileInputChange(e, images.length)
-            }
-          }}
-          onDrop={handleDrop}
-          onDragOver={(e) => e.preventDefault()}
+          ref={inputFileRef}
+          multiple
+          onChange={handleFileInputChange}
         />
         <p className="text-gray-500">Drag and drop or click to upload images</p>
       </div>
@@ -80,22 +70,12 @@ const EventPicturesInput: React.FC = () => {
               className="w-40 h-40 object-cover rounded-lg"
             />
             <button
-              className="absolute top-2 left-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center cursor-pointer"
+              type="button"
+              className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center cursor-pointer"
               onClick={() => handleRemove(index)}
             >
               X
             </button>
-            <input
-              type="file"
-              accept="image/*"
-              className="sr-only"
-              name={`EventPicture${index + 1}`}
-              ref={image.inputRef}
-              onChange={(e) => {
-                e.preventDefault()
-                handleFileInputChange(e, index)
-              }}
-            />
           </div>
         ))}
       </div>
