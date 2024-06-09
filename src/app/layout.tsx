@@ -18,8 +18,6 @@ export default function RootLayout({
   children: React.ReactNode
   modal: React.ReactNode
 }>) {
-  // const isMain = pathname === '/'
-
   return (
     <html lang="en">
       <body className={inter.className + ' overscroll-none'}>
