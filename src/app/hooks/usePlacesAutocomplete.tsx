@@ -2,10 +2,9 @@
 'use client'
 import React, { useState, useCallback } from 'react'
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService'
-import { EventLocation } from '@/types/event/event'
 
 export const usePlacesAutoComplete = () => {
-  const [placeSelected, setPlaceSelected] = useState<EventLocation | null>(null)
+  const [placeSelected, setPlaceSelected] = useState<string | null>(null)
   const [show, setShow] = useState(false)
   const [inputValue, setInputValue] = useState<string>('')
 
@@ -15,7 +14,7 @@ export const usePlacesAutoComplete = () => {
     getPlacePredictions,
     isPlacePredictionsLoading,
   } = usePlacesService({
-    apiKey: process.env.GOOGLE_API_KEY,
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
     debounce: 350,
     language: 'en-gb',
   })
@@ -29,42 +28,33 @@ export const usePlacesAutoComplete = () => {
       event.preventDefault()
       if (!isPlacePredictionsLoading) {
         setShow(false)
+        setPlaceSelected(placeId)
         setInputValue(description)
-        placesService?.getDetails(
-          {
-            placeId,
-            fields: [
-              'geometry.location',
-              'place_id',
-              'address_components',
-              'name',
-            ],
-          },
-          (placeDetails) => {
-            if (
-              placeDetails?.geometry?.location?.lat &&
-              placeDetails?.place_id &&
-              placeDetails?.address_components &&
-              placeDetails?.name
-            ) {
-              const lat = placeDetails.geometry.location.lat()
-              const lng = placeDetails.geometry.location.lng()
-              const address = placeDetails.address_components
-
-              setPlaceSelected({
-                id: placeDetails.place_id,
-                name: placeDetails.name,
-                address,
-                lat,
-                lng,
-              })
-            }
-          },
-        )
       }
     },
     [isPlacePredictionsLoading, placesService],
   )
+  const getPlaceDetails = (placeId: string, setState: () => void) =>
+    placesService?.getDetails(
+      {
+        placeId,
+        fields: ['geometry.location', 'place_id', 'address_components', 'name'],
+      },
+      // Callback example
+      (placeDetails) => {
+        if (
+          placeDetails?.geometry?.location?.lat &&
+          placeDetails?.place_id &&
+          placeDetails?.address_components &&
+          placeDetails?.name
+        ) {
+          const lat = placeDetails.geometry.location.lat()
+          const lng = placeDetails.geometry.location.lng()
+          const address = placeDetails.address_components
+          // set your state.
+        }
+      },
+    )
 
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,5 +99,6 @@ export const usePlacesAutoComplete = () => {
     handleInputChange,
     handleInputFocus,
     handleInputBlur,
+    getPlaceDetails,
   }
 }

@@ -25,7 +25,7 @@ export const RegisterFormSchema = z
       .trim(),
     passwordConfirmation: z.string().trim(),
     profilePicture: z
-      .instanceof(File)
+      .custom<File>()
       .refine(
         (file) => {
           return ACCEPTED_FILE_TYPES.includes(file.type)

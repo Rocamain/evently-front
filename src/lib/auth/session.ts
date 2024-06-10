@@ -32,7 +32,7 @@ export async function decrypt(session: string | undefined = '') {
 export async function createSession(accessToken: string, expires: number) {
   const expiresAt = new Date(Date.now() + expires * 1000)
   const session = await encrypt({ accessToken, expiresAt })
-  console.log({ session })
+
   cookies().set('session', session, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
