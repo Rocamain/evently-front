@@ -11,7 +11,6 @@ const allowedKeys = [
   '7',
   '8',
   '9',
-  '.',
   'Backspace',
   'ArrowLeft',
   'ArrowRight',
@@ -35,7 +34,7 @@ export default function EventPriceInput({ error }: { error?: string[] }) {
 
   return (
     <div>
-      <label htmlFor="price" className="font-bold">
+      <label htmlFor="eventPrice" className="font-bold">
         Price
         {error && (
           <span className="text-red-500 cursor-pointer" title={error[0]}>
@@ -45,14 +44,15 @@ export default function EventPriceInput({ error }: { error?: string[] }) {
       </label>
       <div className="relative mt-4">
         <input
+          title="Decimal numbers not accepted"
           type="number"
-          name="EventPrice"
-          id="price"
+          name="eventPrice"
+          id="eventPrice"
           className="block w-[90px] bg-gray-100 border rounded-md py-1.5 pl-2.5 pr-2 font-medium placeholder:text-gray-500"
-          defaultValue="0.00"
+          defaultValue="0"
           aria-describedby="price-currency"
           onKeyDown={handleKeyDown}
-          step="0.01"
+          step="1"
         />
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
           <span className="text-gray-900" id="price-currency">

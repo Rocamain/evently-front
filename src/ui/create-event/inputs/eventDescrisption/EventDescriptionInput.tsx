@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef } from 'react'
-import { Editor, EditorProvider, useCurrentEditor } from '@tiptap/react'
+import { EditorProvider, useCurrentEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import React from 'react'
 import StepButtons from '../../buttons/StepButtons'
@@ -110,8 +110,13 @@ const ButtonsBar = ({
 
   return (
     <>
-      <label htmlFor="EventDescription" className="sr-only" />
-      <input ref={inputRef} name="EventDescription" className="sr-only" />
+      <label htmlFor="eventDescription" className="sr-only" />
+      <input
+        ref={inputRef}
+        id="eventDescription"
+        name="eventDescription"
+        className="sr-only"
+      />
       <StepButtons
         isFirstStep={isFirstStep}
         isLastStep={isLastStep}

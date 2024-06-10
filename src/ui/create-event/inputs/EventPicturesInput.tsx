@@ -1,11 +1,14 @@
 'use client'
 import React, { useState, useRef } from 'react'
+import NextImage from 'next/image'
 
 const MAX_IMAGES = 5
 
 interface ImageUpload {
   file: File
   previewUrl: string
+  width: number
+  height: number
 }
 
 const EventPicturesInput: React.FC = () => {
@@ -25,13 +28,30 @@ const EventPicturesInput: React.FC = () => {
 
   const handleFiles = (files: FileList | null) => {
     if (files) {
-      const newImages: ImageUpload[] = Array.from(files).map((file) => ({
-        file,
-        previewUrl: URL.createObjectURL(file),
-      }))
-      setImages((prevImages) =>
-        [...prevImages, ...newImages].slice(0, MAX_IMAGES),
-      )
+      const newImagesPromises = Array.from(files).map((file) => {
+        return new Promise<ImageUpload>((resolve) => {
+          const reader = new FileReader()
+          reader.onload = () => {
+            const img = document.createElement('img')
+            img.onload = () => {
+              resolve({
+                file,
+                previewUrl: URL.createObjectURL(file),
+                width: 250,
+                height: 200,
+              })
+            }
+            img.src = reader.result as string
+          }
+          reader.readAsDataURL(file)
+        })
+      })
+
+      Promise.all(newImagesPromises).then((newImages) => {
+        setImages((prevImages) =>
+          [...prevImages, ...newImages].slice(0, MAX_IMAGES),
+        )
+      })
     }
   }
 
@@ -50,9 +70,11 @@ const EventPicturesInput: React.FC = () => {
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
       >
+        <label htmlFor="eventPictures" className="sr-only"></label>
         <input
           type="file"
           className="hidden"
+          id="eventPictures"
           name="eventPictures"
           accept="image/*"
           ref={inputFileRef}
@@ -64,10 +86,13 @@ const EventPicturesInput: React.FC = () => {
       <div className="flex flex-wrap justify-center">
         {images.map((image, index) => (
           <div key={index} className="relative m-2">
-            <img
+            <NextImage
               src={image.previewUrl}
               alt={`Image ${index + 1}`}
-              className="w-40 h-40 object-cover rounded-lg"
+              loading={'lazy'}
+              width={250}
+              height={200}
+              className="object-cover rounded-lg"
             />
             <button
               type="button"

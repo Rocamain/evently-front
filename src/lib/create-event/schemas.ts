@@ -14,18 +14,17 @@ const EventLocationSchema = z.object({
   lng: z.number().optional(),
 })
 
-const FileArraySchema = z.array(z.instanceof(File))
-
+const FileArraySchema = z.array(z.custom<File>())
 export const CreateEventSchema = z.object({
   eventTitle: z.string().min(1, 'Event title is required'),
   eventLink: z.string().url('Invalid URL'),
-  eventLocation: EventLocationSchema.or(z.literal('')),
+  eventLocation: z.string(),
   eventCategory: z.string().min(1, 'Event category is required'),
   eventPrice: z.number().min(0, 'Event price must be a positive number'),
   eventTime: z
     .string()
     .regex(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, 'Invalid time format'),
-  eventDate: z.date(),
+  eventDate: z.string().date(),
   eventDescription: z.string().min(1, 'Event description is required'),
   eventPictures: FileArraySchema,
 })
