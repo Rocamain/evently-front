@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import { Editor, EditorProvider, useCurrentEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import React from 'react'
-import StepButtons from '../../buttons/StepButtons'
+import StepButtons from '../buttons/StepButtons'
 
 const MenuBar = ({ error }: { error?: string[] }) => {
   const { editor } = useCurrentEditor()
@@ -110,8 +110,8 @@ const ButtonsBar = ({
 
   return (
     <>
-      <label htmlFor="EventDescription" className="sr-only" />
-      <input ref={inputRef} name="EventDescription" className="sr-only" />
+      <label htmlFor="eventDescription" className="sr-only" />
+      <input ref={inputRef} name="eventDescription" className="sr-only" />
       <StepButtons
         isFirstStep={isFirstStep}
         isLastStep={isLastStep}
@@ -140,7 +140,7 @@ const extensions = [
   }),
 ]
 
-export default function EventDescriptionInput({
+export default function eventDescriptionInput({
   error,
   handleBack,
   handleNext,
