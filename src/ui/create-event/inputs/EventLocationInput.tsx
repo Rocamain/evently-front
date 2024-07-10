@@ -14,7 +14,6 @@ export default function eventLocationInput({ error }: { error?: string[] }) {
     handleInputBlur,
   } = usePlacesAutoComplete()
 
-  console.log({ placeSelected })
   return (
     <div className="relative ml-6 mb-6">
       <div>
