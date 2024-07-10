@@ -22,11 +22,11 @@ export default function PlacesAutoCompleteInput() {
   return (
     <div className="relative flex-grow sm:w-1/2 outline-none">
       <div className="sticky top-0 flex items-center outline-none">
-        <label htmlFor="EventLocation" className="sr-only">
+        <label htmlFor="eventLocationSeachBox" className="sr-only">
           Events location
         </label>
         <input
-          name="EventLocation"
+          name="eventLocationSeachBox"
           type="text"
           autoComplete="off"
           placeholder="City, postcode ..."
