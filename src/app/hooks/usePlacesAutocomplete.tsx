@@ -3,7 +3,6 @@
 import React, { useState, useCallback } from 'react'
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService'
 import { EventLocation } from '@/types/event/event'
-
 export const usePlacesAutoComplete = () => {
   const [placeSelected, setPlaceSelected] = useState<EventLocation | null>(null)
   const [show, setShow] = useState(false)
@@ -30,42 +29,46 @@ export const usePlacesAutoComplete = () => {
       if (!isPlacePredictionsLoading) {
         setShow(false)
         setInputValue(description)
-        placesService?.getDetails(
-          {
-            placeId,
-            fields: [
-              'geometry.location',
-              'place_id',
-              'address_components',
-              'name',
-            ],
-          },
-          (placeDetails) => {
-            if (
-              placeDetails?.geometry?.location?.lat &&
-              placeDetails?.place_id &&
-              placeDetails?.address_components &&
-              placeDetails?.name
-            ) {
-              const lat = placeDetails.geometry.location.lat()
-              const lng = placeDetails.geometry.location.lng()
-              const address = placeDetails.address_components
-
-              setPlaceSelected({
-                id: placeDetails.place_id,
-                name: placeDetails.name,
-                address,
-                lat,
-                lng,
-              })
-            }
-          },
-        )
+        setPlaceInfo(placeId)
       }
     },
     [isPlacePredictionsLoading, placesService],
   )
 
+  const setPlaceInfo = (placeId: string) => {
+    console.log('PlaceGetInfo')
+    placesService?.getDetails(
+      {
+        placeId,
+        fields: [
+          'geometry.location',
+
+          'address_components',
+          'name',
+          'formatted_address',
+        ],
+      },
+      (placeDetails) => {
+        console.log('runnnig callback')
+        if (
+          placeDetails?.geometry?.location?.lat &&
+          placeDetails?.address_components &&
+          placeDetails?.name
+        ) {
+          const eventLocationLat = placeDetails.geometry.location.lat()
+          const eventLocationLng = placeDetails.geometry.location.lng()
+          const eventLocationAddress = placeDetails.formatted_address
+
+          setPlaceSelected({
+            eventLocationId: placeId,
+            eventLocationAddress,
+            eventLocationLat,
+            eventLocationLng,
+          })
+        }
+      },
+    )
+  }
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       event.preventDefault()
