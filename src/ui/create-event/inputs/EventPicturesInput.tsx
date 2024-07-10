@@ -61,26 +61,6 @@ const EventPicturesInput: React.FC = () => {
     setImages(newImages)
   }
 
-  const uploadImages = async () => {
-    const buffers = await Promise.all(
-      images.map(async (image) => {
-        const arrayBuffer = await image.file.arrayBuffer()
-        return Buffer.from(arrayBuffer)
-      }),
-    )
-
-    const response = await fetch('/api/upload-images', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ images: buffers }),
-    })
-
-    const result = await response.json()
-    console.log(result)
-  }
-
   return (
     <div className="flex flex-col items-center justify-center">
       <div
@@ -120,12 +100,6 @@ const EventPicturesInput: React.FC = () => {
           </div>
         ))}
       </div>
-      <button
-        onClick={uploadImages}
-        className="mt-4 p-2 bg-blue-500 text-white rounded-lg"
-      >
-        Upload Images
-      </button>
     </div>
   )
 }
