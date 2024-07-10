@@ -9,7 +9,7 @@ import {
 } from '@heroicons/react/16/solid'
 import { InformationCircleIcon } from '@heroicons/react/24/solid'
 import EventGeneralInfoInputs from './inputs/EventGeneralInfoInputs'
-import EventDescriptionInput from './inputs/eventDescrisption/EventDescriptionInput'
+import EventDescriptionInput from './inputs/EventDescriptionInput'
 import StepButtons from '@/ui/create-event/buttons/StepButtons'
 import { CreateEventAction } from '@/lib/create-event/actions'
 import { useFormState } from 'react-dom'
