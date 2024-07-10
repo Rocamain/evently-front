@@ -4,17 +4,20 @@ export interface EventAddressInfo {
 }
 
 interface EventLocation {
-  id: string
-  name?: string
-  address?: google.maps.GeocoderAddressComponent[]
-  lat?: number
-  lng?: number
+  eventLocationId: string
+  eventLocationAddress: string | undefined
+  eventLocationLat: number
+  eventLocationLng: number
 }
 
 export interface ValidationErrors {
   eventTitle?: string[] | undefined
   eventLink?: string[] | undefined
   eventLocation?: string[] | undefined
+  eventLocationId?: string[] | undefined
+  eventLocationAddress?: string[] | undefined
+  eventLocationLng?: string[] | undefined
+  eventGeoHash?: string[] | undefined
   eventCategory?: string[] | undefined
   eventPrice?: string[] | undefined
   eventTime?: string[] | undefined
