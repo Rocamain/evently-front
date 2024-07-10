@@ -1,7 +1,5 @@
 import SubmitButton from './SubmitButton'
 
-function submitButton() {}
-
 export default function StepButtons({
   handleBack,
   handleNext,
