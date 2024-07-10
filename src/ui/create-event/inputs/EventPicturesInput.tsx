@@ -1,5 +1,7 @@
 'use client'
 import React, { useState, useRef } from 'react'
+import Image from 'next/image'
+import imageCompression from 'browser-image-compression'
 
 const MAX_IMAGES = 5
 
@@ -23,9 +25,26 @@ const EventPicturesInput: React.FC = () => {
     handleFiles(files)
   }
 
-  const handleFiles = (files: FileList | null) => {
+  const handleFiles = async (files: FileList | null) => {
     if (files) {
-      const newImages: ImageUpload[] = Array.from(files).map((file) => ({
+      const compressedFiles = await Promise.all(
+        Array.from(files).map(async (file) => {
+          const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 300,
+            useWebWorker: true,
+          }
+          try {
+            const compressedFile = await imageCompression(file, options)
+            return compressedFile
+          } catch (error) {
+            console.error('Error compressing image:', error)
+            return file
+          }
+        }),
+      )
+
+      const newImages: ImageUpload[] = compressedFiles.map((file) => ({
         file,
         previewUrl: URL.createObjectURL(file),
       }))
@@ -40,6 +59,26 @@ const EventPicturesInput: React.FC = () => {
     const removedImage = newImages.splice(index, 1)[0]
     URL.revokeObjectURL(removedImage.previewUrl)
     setImages(newImages)
+  }
+
+  const uploadImages = async () => {
+    const buffers = await Promise.all(
+      images.map(async (image) => {
+        const arrayBuffer = await image.file.arrayBuffer()
+        return Buffer.from(arrayBuffer)
+      }),
+    )
+
+    const response = await fetch('/api/upload-images', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ images: buffers }),
+    })
+
+    const result = await response.json()
+    console.log(result)
   }
 
   return (
@@ -64,9 +103,11 @@ const EventPicturesInput: React.FC = () => {
       <div className="flex flex-wrap justify-center">
         {images.map((image, index) => (
           <div key={index} className="relative m-2">
-            <img
+            <Image
               src={image.previewUrl}
               alt={`Image ${index + 1}`}
+              width={160}
+              height={160}
               className="w-40 h-40 object-cover rounded-lg"
             />
             <button
@@ -79,6 +120,12 @@ const EventPicturesInput: React.FC = () => {
           </div>
         ))}
       </div>
+      <button
+        onClick={uploadImages}
+        className="mt-4 p-2 bg-blue-500 text-white rounded-lg"
+      >
+        Upload Images
+      </button>
     </div>
   )
 }

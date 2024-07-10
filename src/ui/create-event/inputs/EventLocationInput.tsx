@@ -2,7 +2,7 @@
 
 import { usePlacesAutoComplete } from '@/app/hooks/usePlacesAutocomplete'
 
-export default function EventLocationInput({ error }: { error?: string[] }) {
+export default function eventLocationInput({ error }: { error?: string[] }) {
   const {
     placeSelected,
     show,
@@ -14,10 +14,11 @@ export default function EventLocationInput({ error }: { error?: string[] }) {
     handleInputBlur,
   } = usePlacesAutoComplete()
 
+  console.log({ placeSelected })
   return (
     <div className="relative ml-6 mb-6">
       <div>
-        <label htmlFor="EventLocation" className="font-bold text-medium">
+        <label htmlFor="eventLocation" className="font-bold text-medium">
           Event location
           {error && (
             <span className="text-red-500 cursor-pointer" title={error[0]}>
@@ -36,7 +37,7 @@ export default function EventLocationInput({ error }: { error?: string[] }) {
           value={inputValue}
         />
         <input
-          name="EventLocation"
+          name="eventLocation"
           type="text"
           className="sr-only"
           defaultValue={placeSelected ? JSON.stringify(placeSelected) : ''}
