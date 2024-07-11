@@ -87,13 +87,27 @@ export default function CreateEventForm() {
         'eventCategory',
         'eventPrice',
       ]
+      const stepTwoError = ['eventDescription']
+      const stepThreeError = ['eventPictures']
       const goBackTostepOne = stepOneError.some((errorType) =>
+        state.errors.hasOwnProperty(errorType),
+      )
+      const goBackTostepTwo = stepTwoError.some((errorType) =>
+        state.errors.hasOwnProperty(errorType),
+      )
+      const goBackTostepThree = stepThreeError.some((errorType) =>
         state.errors.hasOwnProperty(errorType),
       )
       if (goBackTostepOne) {
         setCurrentStep(1)
       }
-      console.log({ goBackTostepOne })
+
+      if (goBackTostepTwo && !goBackTostepOne) {
+        setCurrentStep(2)
+      }
+      if (goBackTostepThree && !goBackTostepTwo && !goBackTostepOne) {
+        setCurrentStep(3)
+      }
     }
   }, [state])
 

@@ -14,7 +14,7 @@ export const usePlacesAutoComplete = () => {
     getPlacePredictions,
     isPlacePredictionsLoading,
   } = usePlacesService({
-    apiKey: process.env.GOOGLE_API_KEY,
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
     debounce: 350,
     language: 'en-gb',
   })
@@ -28,6 +28,7 @@ export const usePlacesAutoComplete = () => {
       event.preventDefault()
       if (!isPlacePredictionsLoading) {
         setShow(false)
+
         setInputValue(description)
         setPlaceInfo(placeId)
       }
@@ -36,23 +37,15 @@ export const usePlacesAutoComplete = () => {
   )
 
   const setPlaceInfo = (placeId: string) => {
-    console.log('PlaceGetInfo')
     placesService?.getDetails(
       {
         placeId,
-        fields: [
-          'geometry.location',
-
-          'address_components',
-          'name',
-          'formatted_address',
-        ],
+        fields: ['geometry.location', 'name', 'formatted_address'],
       },
       (placeDetails) => {
-        console.log('runnnig callback')
         if (
           placeDetails?.geometry?.location?.lat &&
-          placeDetails?.address_components &&
+          placeDetails?.formatted_address &&
           placeDetails?.name
         ) {
           const eventLocationLat = placeDetails.geometry.location.lat()

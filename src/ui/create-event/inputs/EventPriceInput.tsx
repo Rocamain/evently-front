@@ -35,7 +35,7 @@ export default function eventPriceInput({ error }: { error?: string[] }) {
 
   return (
     <div>
-      <label htmlFor="price" className="font-bold">
+      <label htmlFor="eventPrice" className="font-bold">
         Price
         {error && (
           <span className="text-red-500 cursor-pointer" title={'Set a Price'}>
@@ -45,6 +45,7 @@ export default function eventPriceInput({ error }: { error?: string[] }) {
       </label>
       <div className="relative mt-4">
         <input
+          title="Decimal numbers not accepted"
           type="number"
           name="eventPrice"
           id="price"
@@ -52,7 +53,7 @@ export default function eventPriceInput({ error }: { error?: string[] }) {
           placeholder="0.00"
           aria-describedby="price-currency"
           onKeyDown={handleKeyDown}
-          step="0.01"
+          step="1"
         />
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
           <span className="text-gray-900" id="price-currency">

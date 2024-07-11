@@ -97,6 +97,7 @@ const EventPicturesInput: React.FC<EventPicturesInputProps> = ({ error }) => {
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
       >
+        <label htmlFor="eventPictures" className="sr-only"></label>
         <input
           type="file"
           className="hidden"

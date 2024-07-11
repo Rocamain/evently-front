@@ -62,6 +62,7 @@ export async function CreateEventAction(
     eventPrice,
     eventTime: `${eventTime}:00`, // Ensuring time format is HH:mm:ss
     eventDate,
+    eventDate,
     eventDescription,
     files,
   }

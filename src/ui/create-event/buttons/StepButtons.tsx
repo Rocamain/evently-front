@@ -14,7 +14,6 @@ export default function StepButtons({
   isLastStep: boolean
 }) {
   const isEventCreated = Boolean(eventId)
-  console.log({ eventId, isEventCreated })
 
   return (
     <div>

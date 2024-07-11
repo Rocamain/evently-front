@@ -40,6 +40,7 @@ export default function eventLocationInput({ error }: { error?: string[] }) {
         />
         <input
           name="eventLocation"
+          id="eventLocation"
           type="text"
           className="sr-only"
           defaultValue={placeSelected ? JSON.stringify(placeSelected) : ''}
