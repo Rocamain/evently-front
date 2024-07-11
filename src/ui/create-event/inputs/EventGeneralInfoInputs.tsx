@@ -14,9 +14,16 @@ export default function EventGeneralInfoInputs({
     <div>
       <EventTitleInput error={validationErrors?.eventTitle} />
       <EventLinkInput error={validationErrors?.eventLink} />
-      <EventLocationInput error={validationErrors?.eventLocation} />
+      <EventLocationInput
+        error={
+          validationErrors?.eventLocationId ||
+          validationErrors?.eventLocationAddress ||
+          validationErrors?.eventLocationLat ||
+          validationErrors?.eventLocationLng
+        }
+      />
       <EventCategoryInput error={validationErrors?.eventCategory} />
-      <div className="flex gap-8 ml-6 mb-6">
+      <div className="flex flex-wrap gap-8 ml-6 mb-6">
         <EventPriceInput error={validationErrors?.eventPrice} />
         <EventDateTimeInput
           error={validationErrors?.eventTime || validationErrors?.eventDate}

@@ -2,9 +2,9 @@
 'use client'
 import React, { useState, useCallback } from 'react'
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService'
-
+import { EventLocation } from '@/types/event/event'
 export const usePlacesAutoComplete = () => {
-  const [placeSelected, setPlaceSelected] = useState<string | null>(null)
+  const [placeSelected, setPlaceSelected] = useState<EventLocation | null>(null)
   const [show, setShow] = useState(false)
   const [inputValue, setInputValue] = useState<string>('')
 
@@ -28,34 +28,40 @@ export const usePlacesAutoComplete = () => {
       event.preventDefault()
       if (!isPlacePredictionsLoading) {
         setShow(false)
-        setPlaceSelected(placeId)
+
         setInputValue(description)
+        setPlaceInfo(placeId)
       }
     },
     [isPlacePredictionsLoading, placesService],
   )
-  const getPlaceDetails = (placeId: string, setState: () => void) =>
+
+  const setPlaceInfo = (placeId: string) => {
     placesService?.getDetails(
       {
         placeId,
-        fields: ['geometry.location', 'place_id', 'address_components', 'name'],
+        fields: ['geometry.location', 'name', 'formatted_address'],
       },
-      // Callback example
       (placeDetails) => {
         if (
           placeDetails?.geometry?.location?.lat &&
-          placeDetails?.place_id &&
-          placeDetails?.address_components &&
+          placeDetails?.formatted_address &&
           placeDetails?.name
         ) {
-          const lat = placeDetails.geometry.location.lat()
-          const lng = placeDetails.geometry.location.lng()
-          const address = placeDetails.address_components
-          // set your state.
+          const eventLocationLat = placeDetails.geometry.location.lat()
+          const eventLocationLng = placeDetails.geometry.location.lng()
+          const eventLocationAddress = placeDetails.formatted_address
+
+          setPlaceSelected({
+            eventLocationId: placeId,
+            eventLocationAddress,
+            eventLocationLat,
+            eventLocationLng,
+          })
         }
       },
     )
-
+  }
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       event.preventDefault()
@@ -99,6 +105,5 @@ export const usePlacesAutoComplete = () => {
     handleInputChange,
     handleInputFocus,
     handleInputBlur,
-    getPlaceDetails,
   }
 }

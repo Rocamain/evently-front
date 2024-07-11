@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import { EditorProvider, useCurrentEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import React from 'react'
-import StepButtons from '../../buttons/StepButtons'
+import StepButtons from '../buttons/StepButtons'
 
 const MenuBar = ({ error }: { error?: string[] }) => {
   const { editor } = useCurrentEditor()
@@ -17,7 +17,7 @@ const MenuBar = ({ error }: { error?: string[] }) => {
   }
 
   return (
-    <div className="flex gap-2 relative">
+    <div className="flex flex-wrap gap-2 relative">
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={!editor.can().chain().focus().toggleBold().run()}
@@ -145,7 +145,7 @@ const extensions = [
   }),
 ]
 
-export default function EventDescriptionInput({
+export default function eventDescriptionInput({
   error,
   handleBack,
   handleNext,

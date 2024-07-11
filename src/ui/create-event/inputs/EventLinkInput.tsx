@@ -1,4 +1,4 @@
-export default function EventLinkInput({ error }: { error?: string[] }) {
+export default function eventLinkInput({ error }: { error?: string[] }) {
   return (
     <div className="ml-6 mb-6">
       <label htmlFor="eventLink" className="font-bold text-medium">
@@ -11,8 +11,8 @@ export default function EventLinkInput({ error }: { error?: string[] }) {
       </label>
       <input
         type="url"
-        id="eventLink"
         name="eventLink"
+        autoComplete="off"
         pattern=".*"
         placeholder={'https://example.com'}
         className="mt-2 w-full p-2 border border-gray-300 font-medium rounded-md"

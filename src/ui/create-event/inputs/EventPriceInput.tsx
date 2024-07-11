@@ -11,12 +11,13 @@ const allowedKeys = [
   '7',
   '8',
   '9',
+  '.',
   'Backspace',
   'ArrowLeft',
   'ArrowRight',
   'Delete',
 ]
-export default function EventPriceInput({ error }: { error?: string[] }) {
+export default function eventPriceInput({ error }: { error?: string[] }) {
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       const { key, currentTarget } = event
@@ -37,7 +38,7 @@ export default function EventPriceInput({ error }: { error?: string[] }) {
       <label htmlFor="eventPrice" className="font-bold">
         Price
         {error && (
-          <span className="text-red-500 cursor-pointer" title={error[0]}>
+          <span className="text-red-500 cursor-pointer" title={'Set a Price'}>
             *
           </span>
         )}
@@ -47,9 +48,9 @@ export default function EventPriceInput({ error }: { error?: string[] }) {
           title="Decimal numbers not accepted"
           type="number"
           name="eventPrice"
-          id="eventPrice"
+          id="price"
           className="block w-[90px] bg-gray-100 border rounded-md py-1.5 pl-2.5 pr-2 font-medium placeholder:text-gray-500"
-          defaultValue="0"
+          placeholder="0.00"
           aria-describedby="price-currency"
           onKeyDown={handleKeyDown}
           step="1"

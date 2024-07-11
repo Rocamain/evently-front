@@ -1,16 +1,19 @@
 import { eventCategories } from '@/lib/create-event/utils'
-export default function EventCategoryInput({ error }: { error?: string[] }) {
+export default function eventCategoryInput({ error }: { error?: string[] }) {
   return (
     <fieldset className="ml-6 mb-6">
       <legend className="mb-4 font-bold">
         Choose a category
         {error && (
-          <span className="text-red-500 cursor-pointer" title={error[0]}>
+          <span
+            className="text-red-500 cursor-pointer"
+            title={'Select a category'}
+          >
             *
           </span>
         )}
       </legend>
-      <div className="grid grid-cols-4 gap-4 w-[500px]">
+      <div className="grid  grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-4 sm:w-[500px]">
         {eventCategories.map((category) => (
           <div className="flex items-center" key={category}>
             <input

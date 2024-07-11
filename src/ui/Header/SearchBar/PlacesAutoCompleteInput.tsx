@@ -22,11 +22,11 @@ export default function PlacesAutoCompleteInput() {
   return (
     <div className="relative flex-grow sm:w-1/2 outline-none">
       <div className="sticky top-0 flex items-center outline-none">
-        <label htmlFor="eventLocation" className="sr-only">
+        <label htmlFor="eventLocationSeachBox" className="sr-only">
           Events location
         </label>
         <input
-          name="location"
+          name="eventLocationSeachBox"
           type="text"
           autoComplete="off"
           placeholder="City, postcode ..."
@@ -40,7 +40,7 @@ export default function PlacesAutoCompleteInput() {
           name="eventLocation"
           type="text"
           className="hidden"
-          value={placeSelected ? placeSelected : undefined}
+          defaultValue={placeSelected ? JSON.stringify(placeSelected) : ''}
         />
       </div>
       {show && (

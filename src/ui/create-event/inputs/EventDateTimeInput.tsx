@@ -1,17 +1,32 @@
-export default function EventDateTimeInput({ error }: { error?: string[] }) {
+function addOneDayToTodayInUKTime() {
+  const today = new Date()
+  today.setDate(today.getDate() + 1)
+
+  const year = today.getUTCFullYear()
+  const month = String(today.getUTCMonth() + 1).padStart(2, '0') // Months are zero-indexed
+  const day = String(today.getUTCDate()).padStart(2, '0')
+
+  return `${year}-${month}-${day}`
+}
+
+export default function eventDateTimeInput({ error }: { error?: string[] }) {
   return (
     <div>
       <fieldset>
         <legend className="mb-4 font-bold">
           Set a Time and a Date Event Time
           {error && (
-            <span className="text-red-500 cursor-pointer" title={error[0]}>
+            <span
+              className="text-red-500 cursor-pointer"
+              title={'Invalid Date Time'}
+            >
               *
             </span>
           )}
         </legend>
         <div className="flex gap-4">
           <div className="relative w-[100px]">
+            <label htmlFor="eventTime" className="sr-only"></label>
             <label htmlFor="eventTime" className="sr-only"></label>
             <div className="absolute inset-y-0 start-2 top-0 flex items-center ps-0.5 pointer-events-none">
               <svg
@@ -33,7 +48,6 @@ export default function EventDateTimeInput({ error }: { error?: string[] }) {
               id="eventTime"
               name="eventTime"
               className="pl-8 cursor-text bg-gray-100 border rounded-md leading-none border-gray-300 font-medium text-md focus:ring-red-500 focus:border-red-500 block w-full py-2 px-2.5"
-              defaultValue="00:00"
             />
           </div>
           <div className="w-[160px]">
@@ -43,8 +57,8 @@ export default function EventDateTimeInput({ error }: { error?: string[] }) {
             <input
               type="date"
               name="eventDate"
+              min={addOneDayToTodayInUKTime()}
               className="cursor-text bg-gray-100 border rounded-md leading-none border-gray-300 font-medium text-md focus:ring-red-500 focus:border-red-500 block w-full py-2 px-2.5"
-              defaultValue={new Date().toISOString().split('T')[0]}
             />
           </div>
         </div>
