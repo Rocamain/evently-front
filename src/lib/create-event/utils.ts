@@ -36,9 +36,14 @@ export const setFormDataFromEventLocation = (
     const parsedEventLocationData = JSON.parse(
       eventLocationData,
     ) as EventLocation
-    Object.entries(parsedEventLocationData).forEach(([key, value]) =>
-      formData.set(key, value),
-    )
+    Object.entries(parsedEventLocationData).forEach(([key, value]) => {
+      if (key === 'eventLocationLat') {
+        console.log(key, value, typeof value)
+      }
+
+      formData.set(key, value)
+    })
+    formData.delete('eventLocation')
   } catch (error) {
     return {
       errors: {

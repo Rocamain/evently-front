@@ -16,7 +16,10 @@ export default function eventDateTimeInput({ error }: { error?: string[] }) {
         <legend className="mb-4 font-bold">
           Set a Time and a Date Event Time
           {error && (
-            <span className="text-red-500 cursor-pointer" title={error[0]}>
+            <span
+              className="text-red-500 cursor-pointer"
+              title={'Invalid Date Time'}
+            >
               *
             </span>
           )}

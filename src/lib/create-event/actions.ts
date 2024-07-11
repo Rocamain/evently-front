@@ -1,7 +1,7 @@
 'use server'
 import { encodeGeohash, setFormDataFromEventLocation } from './utils'
 import { CreateEventSchema } from './schemas'
-import { CreateEventState } from '@/types/event/event'
+import { CreateEventState, Event } from '@/types/event/event'
 import { decryptSessionCookie, verifySession } from '../auth/session'
 import { redirect } from 'next/navigation'
 import sharp from 'sharp'
@@ -12,7 +12,8 @@ const { DB_URL } = process.env
 export async function CreateEventAction(
   state: CreateEventState,
   formData: FormData,
-) {
+): Promise<CreateEventState> {
+  // Ensure the return type is CreateEventState
   console.log('Run create action')
 
   // Verify session
@@ -34,15 +35,15 @@ export async function CreateEventAction(
     .filter((item) => item instanceof File) as File[]
 
   formData.set('type', 'event')
-  setFormDataFromEventLocation(eventLocation, formData)
-
   // Get and set geohash
+  setFormDataFromEventLocation(eventLocation, formData)
   const eventLocationLng = parseFloat(
-    (formData.get('eventLocationLng') as string).trim(),
+    formData.get('eventLocationLng') as string,
   )
   const eventLocationLat = parseFloat(
-    (formData.get('eventLocationLat') as string).trim(),
+    formData.get('eventLocationLat') as string,
   )
+
   formData.set(
     'eventGeoHash',
     encodeGeohash({ eventLocationLng, eventLocationLat }),
@@ -52,9 +53,9 @@ export async function CreateEventAction(
   const data = {
     eventTitle,
     eventLink,
-    eventLocationId: formData.get('eventLocationId') as string,
-    eventLocationAddress: formData.get('eventLocationAddress') as string,
-    eventGeoHash: formData.get('eventGeoHash') as string,
+    eventLocationId: formData.get('eventLocationId'),
+    eventLocationAddress: formData.get('eventLocationAddress'),
+    eventGeoHash: formData.get('eventGeoHash'),
     eventCategory,
     eventLocationLng,
     eventLocationLat,
@@ -69,9 +70,23 @@ export async function CreateEventAction(
   const validatedFields = CreateEventSchema.safeParse(data)
   if (!validatedFields.success) {
     console.log({ errors: validatedFields.error.flatten().fieldErrors })
+    if (files.length === 1 && files[0].name === 'undefined') {
+      return {
+        errors: {
+          eventPictures: ['Add a valid image'],
+          ...validatedFields.error.flatten().fieldErrors,
+        },
+      }
+    }
+
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: undefined,
+    }
+  }
+
+  if (files.length === 1 && files[0].name === 'undefined') {
+    return {
+      errors: { eventPictures: ['Add a valid image'] },
     }
   }
 
@@ -123,14 +138,14 @@ export async function CreateEventAction(
       body: formData,
     })
 
-    await res.json()
-
-    return { errors: undefined, message: 'Event created' }
+    const parsedBody: Event = await res.json()
+    console.log({ id: parsedBody.data.eventId })
+    return { message: 'Event created', eventId: parsedBody.data.eventId }
   } catch (error) {
-    console.error('Event creation failed', error)
     return {
-      errors: undefined,
-      message: 'Event creation unsuccessful, server down',
+      errors: {
+        serverError: 'Event creation unsuccessful, something went wrong',
+      },
     }
   }
 }

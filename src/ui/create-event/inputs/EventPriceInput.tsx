@@ -38,7 +38,7 @@ export default function eventPriceInput({ error }: { error?: string[] }) {
       <label htmlFor="price" className="font-bold">
         Price
         {error && (
-          <span className="text-red-500 cursor-pointer" title={error[0]}>
+          <span className="text-red-500 cursor-pointer" title={'Set a Price'}>
             *
           </span>
         )}

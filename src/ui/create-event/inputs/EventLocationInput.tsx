@@ -20,7 +20,10 @@ export default function eventLocationInput({ error }: { error?: string[] }) {
         <label htmlFor="eventLocation" className="font-bold text-medium">
           Event location
           {error && (
-            <span className="text-red-500 cursor-pointer" title={error[0]}>
+            <span
+              className="text-red-500 cursor-pointer"
+              title={'Invalid location'}
+            >
               *
             </span>
           )}

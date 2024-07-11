@@ -1,7 +1,8 @@
 'use client'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import imageCompression from 'browser-image-compression'
+import { XMarkIcon } from '@heroicons/react/16/solid'
 
 const MAX_IMAGES = 5
 
@@ -9,10 +10,34 @@ interface ImageUpload {
   file: File
   previewUrl: string
 }
+interface EventPicturesInputProps {
+  error: boolean
+}
 
-const EventPicturesInput: React.FC = () => {
+const EventPicturesInput: React.FC<EventPicturesInputProps> = ({ error }) => {
   const [images, setImages] = useState<ImageUpload[]>([])
   const inputFileRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    return () => {
+      // Cleanup URLs when component unmounts
+      images.forEach((image) => URL.revokeObjectURL(image.previewUrl))
+    }
+  }, [images])
+
+  const updateInputFiles = (newImages: ImageUpload[]) => {
+    if (inputFileRef.current) {
+      const dataTransfer = new DataTransfer()
+      newImages.forEach((image) => {
+        if (image.file instanceof File) {
+          dataTransfer.items.add(image.file)
+        } else {
+          console.error('The item is not a File:', image.file)
+        }
+      })
+      inputFileRef.current.files = dataTransfer.files
+    }
+  }
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
@@ -36,7 +61,7 @@ const EventPicturesInput: React.FC = () => {
           }
           try {
             const compressedFile = await imageCompression(file, options)
-            return compressedFile
+            return compressedFile instanceof File ? compressedFile : file
           } catch (error) {
             console.error('Error compressing image:', error)
             return file
@@ -48,17 +73,20 @@ const EventPicturesInput: React.FC = () => {
         file,
         previewUrl: URL.createObjectURL(file),
       }))
-      setImages((prevImages) =>
-        [...prevImages, ...newImages].slice(0, MAX_IMAGES),
-      )
+      const updatedImages = [...images, ...newImages].slice(0, MAX_IMAGES)
+      setImages(updatedImages)
+      updateInputFiles(updatedImages)
     }
   }
 
   const handleRemove = (index: number) => {
-    const newImages = [...images]
-    const removedImage = newImages.splice(index, 1)[0]
-    URL.revokeObjectURL(removedImage.previewUrl)
-    setImages(newImages)
+    setImages((prevImages) => {
+      const newImages = [...prevImages]
+      const removedImage = newImages.splice(index, 1)[0]
+      URL.revokeObjectURL(removedImage.previewUrl)
+      updateInputFiles(newImages)
+      return newImages
+    })
   }
 
   return (
@@ -72,13 +100,26 @@ const EventPicturesInput: React.FC = () => {
         <input
           type="file"
           className="hidden"
+          id="eventPictures"
           name="eventPictures"
           accept="image/*"
           ref={inputFileRef}
           multiple
           onChange={handleFileInputChange}
         />
-        <p className="text-gray-500">Drag and drop or click to upload images</p>
+        <div>
+          <p className="text-gray-500">
+            Drag and drop or click to upload images
+          </p>
+          {error && (
+            <span
+              className="absolute right-3 top-0 text-red-500 cursor-pointer"
+              title={'Invalid location'}
+            >
+              *
+            </span>
+          )}
+        </div>
       </div>
       <div className="flex flex-wrap justify-center">
         {images.map((image, index) => (
@@ -95,7 +136,7 @@ const EventPicturesInput: React.FC = () => {
               className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center cursor-pointer"
               onClick={() => handleRemove(index)}
             >
-              X
+              <XMarkIcon />
             </button>
           </div>
         ))}

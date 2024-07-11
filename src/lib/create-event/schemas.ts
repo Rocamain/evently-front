@@ -1,9 +1,9 @@
 import { z } from 'zod'
 
-// Define the FileArraySchema if not defined already
-const FileArraySchema = z.array(z.instanceof(File))
+const FileArraySchema = z
+  .array(z.instanceof(File))
+  .min(1, 'Event requires at least one picture')
 
-// Define the schema for the event
 export const CreateEventSchema = z.object({
   eventTitle: z.string().min(1, 'Event title is required'),
   eventLink: z.string().url('Invalid URL'),

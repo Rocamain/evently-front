@@ -17,7 +17,7 @@ const MenuBar = ({ error }: { error?: string[] }) => {
   }
 
   return (
-    <div className="flex gap-2 relative">
+    <div className="flex flex-wrap gap-2 relative">
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={!editor.can().chain().focus().toggleBold().run()}
