@@ -1,12 +1,35 @@
 'use server'
-import { encodeGeohash, setFormDataFromEventLocation } from './utils'
+import { encodeGeohash } from '../utils'
+import { processFiles } from './utils'
+import { EventLocation } from '@/types/event/event'
 import { CreateEventSchema } from './schemas'
 import { CreateEventState, Event } from '@/types/event/event'
 import { decryptSessionCookie, verifySession } from '../auth/session'
 import { redirect } from 'next/navigation'
-import sharp from 'sharp'
 
 const { DB_URL } = process.env
+
+const setFormDataFromEventLocation = (
+  eventLocationData: string,
+  formData: FormData,
+) => {
+  try {
+    const parsedEventLocationData = JSON.parse(
+      eventLocationData,
+    ) as EventLocation
+    Object.entries(parsedEventLocationData).forEach(([key, value]) => {
+      formData.set(key, value)
+    })
+    formData.delete('eventLocation')
+  } catch (error) {
+    return {
+      errors: {
+        eventLocation: 'Invalid event location',
+        message: 'Event creation unsuccessful',
+      },
+    }
+  }
+}
 
 // Main function to handle event creation
 export async function CreateEventAction(
@@ -14,7 +37,6 @@ export async function CreateEventAction(
   formData: FormData,
 ): Promise<CreateEventState> {
   // Ensure the return type is CreateEventState
-  console.log('Run create action')
 
   // Verify session
   if (!(await verifySession())) {
@@ -62,7 +84,6 @@ export async function CreateEventAction(
     eventPrice,
     eventTime: `${eventTime}:00`, // Ensuring time format is HH:mm:ss
     eventDate,
-    eventDate,
     eventDescription,
     files,
   }
@@ -70,7 +91,6 @@ export async function CreateEventAction(
   // Validate fields
   const validatedFields = CreateEventSchema.safeParse(data)
   if (!validatedFields.success) {
-    console.log({ errors: validatedFields.error.flatten().fieldErrors })
     if (files.length === 1 && files[0].name === 'undefined') {
       return {
         errors: {
@@ -116,19 +136,11 @@ export async function CreateEventAction(
     )
 
     // Process images
-    const eventPictures = await Promise.all(
-      files.map(async (file) => {
-        const buffer = await file.arrayBuffer()
-        const resizedBuffer = await sharp(Buffer.from(buffer))
-          .withMetadata()
-          .resize(300, 300, { kernel: sharp.kernel.cubic, fit: 'cover' })
-          .webp({ quality: 100 })
-          .toBuffer()
-        return new File([resizedBuffer], `${file.name.split('.')[0]}.webp`, {
-          type: 'image/webp',
-        })
-      }),
-    )
+
+    const eventPictures = await processFiles(files, {
+      main: [500, 400],
+      secondary: [400, 340],
+    })
 
     formData.delete('eventPictures')
     eventPictures.forEach((file) => formData.append('eventPictures', file))
@@ -140,7 +152,11 @@ export async function CreateEventAction(
     })
 
     const parsedBody: Event = await res.json()
-    console.log({ id: parsedBody.data.eventId })
+
+    if (parsedBody?.error) {
+      return parsedBody.error
+    }
+
     return { message: 'Event created', eventId: parsedBody.data.eventId }
   } catch (error) {
     return {

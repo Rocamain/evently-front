@@ -1,7 +1,30 @@
 import { z } from 'zod'
+const ACCEPTED_FILE_TYPES = ['image/jpeg', 'image/webp']
+const MIN_UPLOAD_SIZE = 1024 * 1024 // 1MB
 
 const FileArraySchema = z
-  .array(z.instanceof(File))
+  .array(
+    z
+      .custom<File>()
+      .refine(
+        (file) => {
+          return ACCEPTED_FILE_TYPES.includes(file.type)
+        },
+        {
+          message: 'File must be a JPG OR WEBP',
+          path: ['files'],
+        },
+      )
+      .refine(
+        (file) => {
+          return !file || file.size >= MIN_UPLOAD_SIZE
+        },
+        {
+          message: 'File size must be more than 1MB',
+          path: ['files'],
+        },
+      ),
+  )
   .min(1, 'Event requires at least one picture')
 
 export const CreateEventSchema = z.object({
