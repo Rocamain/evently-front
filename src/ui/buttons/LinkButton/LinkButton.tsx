@@ -5,9 +5,10 @@ export default function LinkButton({
   children,
   variant = 'outlined',
   color = 'teal',
+  size = 'big',
   ...props
 }: LinkButtonProps) {
-  const className = styles[variant][color]
+  const className = styles[variant][color][size]
 
   return (
     <Link {...props} className={className} style={{ letterSpacing: '0.01em' }}>

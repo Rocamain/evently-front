@@ -18,6 +18,7 @@
   "dependencies": {
     "@heroicons/react": "^2.1.1",
     "@react-google-maps/api": "^2.19.3",
+    "@tiptap/html": "^2.5.1",
     "@tiptap/pm": "^2.4.0",
     "@tiptap/react": "^2.4.0",
     "@tiptap/starter-kit": "^2.4.0",

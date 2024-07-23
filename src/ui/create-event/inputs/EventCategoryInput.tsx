@@ -1,4 +1,14 @@
-import { eventCategories } from '@/lib/create-event/utils'
+const eventCategories = [
+  'Social',
+  'Tech',
+  'Cooking',
+  'Sports',
+  'Games',
+  'Professional',
+  'Religious',
+  'Travel',
+  'Other',
+]
 export default function eventCategoryInput({ error }: { error?: string[] }) {
   return (
     <fieldset className="ml-6 mb-6">

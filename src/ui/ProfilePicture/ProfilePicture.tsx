@@ -21,7 +21,7 @@ export default function ProfilePicture({
       {!loading && picture && (
         <Image
           src={picture}
-          alt="Upload preview"
+          alt="profile picture"
           className="rounded-full object-cover h-[74px] w-auto"
           width="74"
           height="74"
