@@ -29,6 +29,7 @@ export type AuthActionState =
         password?: string[]
         passwordConfirmation?: string[]
         profilePicture?: string[] | undefined
+        dbError?: string | undefined
       }
       message?: string
     }
@@ -46,6 +47,7 @@ export type AuthAction = (
         password?: string[] | undefined
         passwordConfirmation?: string[]
         profilePicture?: string[] | undefined
+        dbError?: string | undefined
       }
       message: undefined
     }

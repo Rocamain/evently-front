@@ -182,7 +182,8 @@ export default function RegisterForm() {
               state?.errors?.surname?.[0] ||
               state?.errors?.password?.[0] ||
               state?.errors?.passwordConfirmation?.[0] ||
-              state?.errors?.profilePicture?.[0]}
+              state?.errors?.profilePicture?.[0] ||
+              state?.errors?.dbError}
           </p>
         </div>
         <div>
