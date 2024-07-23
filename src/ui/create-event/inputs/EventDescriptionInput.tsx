@@ -2,14 +2,20 @@
 import { useEffect, useRef } from 'react'
 import { EditorProvider, useCurrentEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import React from 'react'
+import {
+  CustomBulletList,
+  CustomHeading,
+  CustomParagraph,
+} from '@/lib/titap-custom'
 import StepButtons from '../buttons/StepButtons'
 
 const MenuBar = ({ error }: { error?: string[] }) => {
   const { editor } = useCurrentEditor()
 
   useEffect(() => {
-    if (editor) editor.commands.focus('start')
+    if (editor) {
+      editor.commands.focus('start')
+    }
   }, [editor])
 
   if (!editor) {
@@ -19,7 +25,10 @@ const MenuBar = ({ error }: { error?: string[] }) => {
   return (
     <div className="flex flex-wrap gap-2 relative">
       <button
-        onClick={() => editor.chain().focus().toggleBold().run()}
+        onClick={(e) => {
+          e.preventDefault()
+          editor.chain().focus().toggleBold().run()
+        }}
         disabled={!editor.can().chain().focus().toggleBold().run()}
         className={
           editor.isActive('bold')
@@ -30,7 +39,10 @@ const MenuBar = ({ error }: { error?: string[] }) => {
         Bold
       </button>
       <button
-        onClick={() => editor.chain().focus().toggleItalic().run()}
+        onClick={(e) => {
+          e.preventDefault()
+          editor.chain().focus().toggleItalic().run()
+        }}
         disabled={!editor.can().chain().focus().toggleItalic().run()}
         className={
           editor.isActive('italic')
@@ -42,7 +54,10 @@ const MenuBar = ({ error }: { error?: string[] }) => {
       </button>
 
       <button
-        onClick={() => editor.chain().focus().setParagraph().run()}
+        onClick={(e) => {
+          e.preventDefault()
+          editor.chain().focus().setParagraph().run()
+        }}
         className={
           editor.isActive('paragraph')
             ? 'bg-gray-400/75 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
@@ -53,9 +68,12 @@ const MenuBar = ({ error }: { error?: string[] }) => {
       </button>
 
       <button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
+        onClick={(e) => {
+          e.preventDefault()
+          editor.chain().focus().toggleHeading({ level: 5 }).run()
+        }}
         className={
-          editor.isActive('heading', { level: 5 })
+          editor.isActive('heading', { level: 1 })
             ? 'bg-gray-400/75 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
             : 'bg-gray-200 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
         }
@@ -63,9 +81,12 @@ const MenuBar = ({ error }: { error?: string[] }) => {
         Header 1
       </button>
       <button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
+        onClick={(e) => {
+          e.preventDefault()
+          editor.chain().focus().toggleHeading({ level: 6 }).run()
+        }}
         className={
-          editor.isActive('heading', { level: 6 })
+          editor.isActive('heading', { level: 2 })
             ? 'bg-gray-400/75 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
             : 'bg-gray-200 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
         }
@@ -73,7 +94,10 @@ const MenuBar = ({ error }: { error?: string[] }) => {
         Header 2
       </button>
       <button
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
+        onClick={(e) => {
+          e.preventDefault()
+          editor.chain().focus().toggleBulletList().run()
+        }}
         className={
           editor.isActive('bulletList')
             ? 'bg-gray-400/75 hover:bg-gray-400 text-gray-800 font-semibold py-[2px] px-2 border border-gray-400 rounded shadow'
@@ -122,7 +146,7 @@ const ButtonsBar = ({
         isLastStep={isLastStep}
         handleNext={() => {
           if (inputRef.current) {
-            inputRef.current.value = editor.getText()
+            inputRef.current.value = editor.getHTML()
           }
           handleNext()
         }}
@@ -133,19 +157,13 @@ const ButtonsBar = ({
 }
 
 const extensions = [
-  StarterKit.configure({
-    bulletList: {
-      keepMarks: true,
-      keepAttributes: true, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
-    },
-    orderedList: {
-      keepMarks: true,
-      keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
-    },
-  }),
+  StarterKit,
+  CustomParagraph,
+  CustomHeading,
+  CustomBulletList,
 ]
 
-export default function eventDescriptionInput({
+export default function EventDescriptionInput({
   error,
   handleBack,
   handleNext,
@@ -170,7 +188,7 @@ export default function eventDescriptionInput({
         />
       }
       extensions={extensions}
-      content={''}
+      content={'<p>Example Text</p>'}
     ></EditorProvider>
   )
 }

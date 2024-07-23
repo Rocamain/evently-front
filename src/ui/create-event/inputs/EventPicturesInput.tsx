@@ -31,8 +31,6 @@ const EventPicturesInput: React.FC<EventPicturesInputProps> = ({ error }) => {
       newImages.forEach((image) => {
         if (image.file instanceof File) {
           dataTransfer.items.add(image.file)
-        } else {
-          console.error('The item is not a File:', image.file)
         }
       })
       inputFileRef.current.files = dataTransfer.files
@@ -63,7 +61,6 @@ const EventPicturesInput: React.FC<EventPicturesInputProps> = ({ error }) => {
             const compressedFile = await imageCompression(file, options)
             return compressedFile instanceof File ? compressedFile : file
           } catch (error) {
-            console.error('Error compressing image:', error)
             return file
           }
         }),

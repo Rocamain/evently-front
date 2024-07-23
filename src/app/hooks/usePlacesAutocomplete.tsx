@@ -14,7 +14,6 @@ export const usePlacesAutoComplete = () => {
     getPlacePredictions,
     isPlacePredictionsLoading,
   } = usePlacesService({
-    apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
     debounce: 350,
     language: 'en-gb',
   })
