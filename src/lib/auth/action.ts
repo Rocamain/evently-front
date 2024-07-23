@@ -3,7 +3,7 @@ import { AuthActionState } from '@/types/auth/auth'
 import { SigninFormSchema, RegisterFormSchema } from './schemas'
 import { createSession, deleteSession } from './session'
 import { redirect } from 'next/navigation'
-
+import { processFiles } from '../create-event/utils'
 const { DB_URL } = process.env
 
 export async function register(state: AuthActionState, formData: FormData) {
@@ -12,7 +12,8 @@ export async function register(state: AuthActionState, formData: FormData) {
   const email = formData.get('email')
   const password = formData.get('password')
   const passwordConfirmation = formData.get('password confirmation')
-  const profilePicture = formData.get('profile picture')
+  const profilePicture = formData.getAll('profile picture') as File[]
+
   try {
     const validatedFields = RegisterFormSchema.safeParse({
       name,
@@ -29,21 +30,32 @@ export async function register(state: AuthActionState, formData: FormData) {
         message: undefined,
       }
     }
+    const processedProfilePicture = await processFiles(profilePicture, {
+      main: [100, 100],
+    })
+
+    formData.delete('passwordConfirmation')
+    formData.delete('profile picture')
+    processedProfilePicture.forEach((file) => {
+      formData.append('profile_picture', file)
+    })
 
     const response = await fetch(`${DB_URL}/join`, {
       method: 'POST',
       body: formData,
     })
 
-    const data = await response.json()
+    const data = await response.json() // type this
 
+    if (!response.ok) {
+      return { errors: { dbError: data.message }, message: undefined }
+    }
     if (data.error) {
-      return { errors: undefined, message: data.error.message }
+      return { errors: { dbError: data.error.message }, message: undefined }
     } else {
       return { errors: undefined, message: 'Register Successful' }
     }
   } catch (e) {
-    //  possible implementation to Error page.
     return { errors: undefined, message: 'Register Unsuccessful' }
   }
 }

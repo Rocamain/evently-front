@@ -42,8 +42,8 @@ export async function createSession(accessToken: string, expires: number) {
   })
 }
 
-export function deleteSession() {
-  cookies().delete('session')
+export async function deleteSession() {
+  await cookies().delete('session')
 }
 
 export async function verifySession() {
@@ -62,7 +62,15 @@ export async function verifySession() {
 export async function decryptSessionCookie() {
   const cookie = cookies().get('session')?.value
   //
-  const session = await decrypt(cookie)
+  if (!cookie) {
+    return { accessToken: undefined }
+  }
+  try {
+    const session = await decrypt(cookie)
 
-  return session
+    return session
+  } catch (e) {
+    await deleteSession()
+    return { accessToken: undefined }
+  }
 }
