@@ -1,55 +1,31 @@
-import ngeohash from 'ngeohash'
-import { EventLocation } from '@/types/event/event'
+import sharp from 'sharp'
 
-export const eventCategories = [
-  'Social',
-  'Tech',
-  'Cooking',
-  'Sport',
-  'Games',
-  'Professional',
-  'Hikes',
-  'Travel',
-  'Other',
-]
-
-const geohashPrecision = 5
-
-// Utility function to encode geohash
-
-export const encodeGeohash = ({
-  eventLocationLat,
-  eventLocationLng,
-}: {
-  eventLocationLat: number
-  eventLocationLng: number
-}) => {
-  return ngeohash.encode(eventLocationLat, eventLocationLng, geohashPrecision)
-}
-// Utility function to parse and set event location data
-
-export const setFormDataFromEventLocation = (
-  eventLocationData: string,
-  formData: FormData,
+export const processFiles = async (
+  files: File[],
+  { main, secondary }: { main: [number, number]; secondary?: [number, number] },
 ) => {
-  try {
-    const parsedEventLocationData = JSON.parse(
-      eventLocationData,
-    ) as EventLocation
-    Object.entries(parsedEventLocationData).forEach(([key, value]) => {
-      if (key === 'eventLocationLat') {
-        console.log(key, value, typeof value)
+  return await Promise.all(
+    files.map(async (file, index) => {
+      const buffer = await file.arrayBuffer()
+      const isMainPicture = index === 0
+      let width = main[0]
+      let height = main[0]
+      if (secondary) {
+        width = isMainPicture ? main[0] : secondary[0]
+        height = isMainPicture ? main[0] : secondary[0]
       }
+      const resizedBuffer = await sharp(Buffer.from(buffer))
+        .withMetadata()
+        .resize(width, height, {
+          kernel: sharp.kernel.cubic,
+          fit: 'cover',
+        })
+        .webp({ quality: 100 })
+        .toBuffer()
 
-      formData.set(key, value)
-    })
-    formData.delete('eventLocation')
-  } catch (error) {
-    return {
-      errors: {
-        eventLocation: 'Invalid event location',
-        message: 'Event creation unsuccessful',
-      },
-    }
-  }
+      return new File([resizedBuffer], `${file.name.split('.')[0]}.webp`, {
+        type: 'image/webp',
+      })
+    }),
+  )
 }
