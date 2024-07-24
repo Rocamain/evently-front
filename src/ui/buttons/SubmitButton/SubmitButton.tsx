@@ -6,10 +6,11 @@ export default function SubmitButton({
   children,
   variant = 'outlined',
   color = 'teal',
+  size = 'big',
 }: ServerButtonProps) {
   const { pending } = useFormStatus()
 
-  const className = styles[variant][color]
+  const className = styles[variant][color][size]
 
   return (
     <button

@@ -14,7 +14,10 @@ export const EventAttendees: React.FC<EventAttendeesProps> = ({
   host,
 }) => {
   return (
-    <div id="attendees" className="md:max-w-screen w-full mt-5 pt-10">
+    <div
+      id="attendees"
+      className="border-b border-y border-shadowColor lg:border-none bg-gray-200/40 lg:bg-none py-6 lg:py-0 px-5 sm:px-10 md:px-20 lg:px-0"
+    >
       <div className="flex justify-between items-center mb-5 mx-4">
         <h2 className="font-semibold text-xl">
           Attendees ({bookings?.length ? bookings?.length + 2 : 1})
@@ -28,7 +31,7 @@ export const EventAttendees: React.FC<EventAttendeesProps> = ({
         </a>
       </div>
       <div>
-        <div className="bg-white">
+        <div className="bg-white rounded-lg">
           <div className="grid grid-flow-col p-6 gap-6 sm:grid-flow-row sm:grid-cols-4 overflow-auto">
             <AttendeeCard attendee={host} />
             {/* <EventBookingAttendees attendees={bookings} /> */}

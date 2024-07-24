@@ -187,7 +187,7 @@ export default function RegisterForm() {
           </p>
         </div>
         <div>
-          <div className="pl-[44px]">
+          <div className="pl-[44px] flex gap-6">
             <SubmitButton color="red" variant="contained">
               Submit
             </SubmitButton>
