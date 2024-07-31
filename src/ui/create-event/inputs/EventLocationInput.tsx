@@ -2,7 +2,7 @@
 
 import { usePlacesAutoComplete } from '@/app/hooks/usePlacesAutocomplete'
 
-export default function eventLocationInput({ error }: { error?: string[] }) {
+export default function EventLocationInput({ error }: { error?: string[] }) {
   const {
     placeSelected,
     show,
