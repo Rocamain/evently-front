@@ -1,6 +1,5 @@
 'use client'
 import FormHeader from '@/ui/auth/AuthForm/FormHeader'
-import AuthWrapper from '@/ui/auth/AuthWrapper'
 import { signin } from '@/lib/auth/action'
 import { useAuthForm } from '@/app/hooks/useAuthForm'
 import {
@@ -26,7 +25,7 @@ export default function SignInForm() {
   })
 
   return (
-    <AuthWrapper>
+    <>
       <FormHeader title="Login to your account" withPicture />
       <form
         ref={formRef}
@@ -89,6 +88,6 @@ export default function SignInForm() {
           </div>
         </div>
       </form>
-    </AuthWrapper>
+    </>
   )
 }

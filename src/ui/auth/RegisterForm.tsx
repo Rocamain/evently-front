@@ -2,7 +2,6 @@
 import { useState, useEffect, ChangeEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import FormHeader from '@/ui/auth/AuthForm/FormHeader'
-import AuthWrapper from '@/ui/auth/AuthWrapper'
 import { register } from '@/lib/auth/action'
 import { useAuthForm } from '@/app/hooks/useAuthForm'
 import {
@@ -43,7 +42,7 @@ export default function RegisterForm() {
     }
   }
   return (
-    <AuthWrapper>
+    <>
       <FormHeader
         title="Join to evently"
         withPicture
@@ -198,6 +197,6 @@ export default function RegisterForm() {
           </div>
         </div>
       </form>
-    </AuthWrapper>
+    </>
   )
 }
