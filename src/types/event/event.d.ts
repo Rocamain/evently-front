@@ -75,8 +75,23 @@ interface Evento {
   userId: string
   eventId: string
 }
+interface Booking {
+  createdAt: string
+  type: string
+  userId: string
+  userName: string
+  userEmail: string
+  userPicture: string
+  eventId: string
+  eventDateAndTime: string
+  eventOwnerName: string
+  eventOwnerId: string
+  eventTitle: string
+  eventCategory: string
+  bookingId: string
+}
 interface EventByID {
-  data: { items: Evento[]; count: number }
+  data: { items: Array<Evento | Booking | Attendee>; count: number }
 }
 export type CreateEventState =
   | {
