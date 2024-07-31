@@ -2,7 +2,6 @@
 import { AuthActionState } from '@/types/auth/auth'
 import { SigninFormSchema, RegisterFormSchema } from './schemas'
 import { createSession, deleteSession } from './session'
-import { redirect } from 'next/navigation'
 import { processFiles } from '../create-event/utils'
 const { DB_URL } = process.env
 
@@ -100,5 +99,4 @@ export async function signin(state: AuthActionState, formData: FormData) {
 
 export async function logout() {
   deleteSession()
-  redirect('/')
 }

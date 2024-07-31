@@ -1,4 +1,5 @@
 import { getUserData, getEventData } from '@/lib/event-by-id/actions'
+import { Attendee, Booking, Evento } from '@/types/event/event'
 import {
   BookingBar,
   EventHeader,
@@ -42,7 +43,7 @@ export default async function EventPage({
   const userInfo = await getUserData()
 
   const [event, ...bookings] = items
-
+  const attendees = [...bookings] as Attendee[]
   const {
     eventOwnerId,
     eventOwnerName,
@@ -57,9 +58,13 @@ export default async function EventPage({
     eventDescription,
     eventPictures,
     eventOwnerPicture,
-  } = event
+  } = event as Evento
 
   const isEventOwner = userInfo.userId === eventOwnerId
+  const bookingAteendee = bookings.filter(
+    (attendee) => attendee.userId === userInfo.userId,
+  )[0] as Booking
+
   const time = getUKlocateDate(new Date(eventDateAndTime))
 
   return (
@@ -100,7 +105,7 @@ export default async function EventPage({
                         userEmail: 'email',
                         isHost: true,
                       }}
-                      bookings={bookings}
+                      attendees={attendees}
                     />
                   </div>
                   <EventInfo
@@ -119,6 +124,10 @@ export default async function EventPage({
         </div>
       </form>
       <BookingBar
+        isEventOwner={isEventOwner}
+        isAttendee={Boolean(bookingAteendee)}
+        bookingAteendee={bookingAteendee}
+        eventId={eventId}
         eventLocation={eventTitle}
         time={time}
         price={Number(eventPrice)}
