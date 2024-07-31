@@ -18,7 +18,6 @@ const MapComponent = dynamic(() => import('./EventMap'), { ssr: false })
 export const EventInfo: React.FC<EventInfoProps> = ({
   time,
   eventLink,
-  eventLocationId,
   eventLocationAddress,
   eventLocationLat,
   eventLocationLng,
@@ -27,7 +26,7 @@ export const EventInfo: React.FC<EventInfoProps> = ({
   const lng = parseFloat(eventLocationLng)
 
   return (
-    <div className="lg:pb-6 lg:bg-none lg:border lg:border-none rounded-lg lg:w-[400px] lg:border-shadowColor">
+    <div className="lg:bg-none lg:border lg:border-none rounded-lg lg:w-[400px] lg:border-shadowColor">
       <div className="lg:sticky lg:top-0 w-full lg:h-fit">
         <div className="py-6 px-5 sm:px-10  md:px-20 lg:px-0 bg-gray-200/40 lg:bg-white border-b border-shadowColor lg:border-gray-300 lg:border lg:border-b-0 lg:rounded-t-lg sm:md:max-w-xl md:max-w-5xl">
           <div className="flex flex-col lg:mx-4">
@@ -68,7 +67,7 @@ export const EventInfo: React.FC<EventInfoProps> = ({
                 href={eventLink}
                 className="ml-2 whitespace-nowrap overflow-hidden"
               >
-                Event's link
+                Event link
               </Link>
             </div>
           </div>
