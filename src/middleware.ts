@@ -1,12 +1,10 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { verifySession } from './lib/auth/session'
-
-const protectedRoutes = ['/dashboard', '/create-event']
-const publicRoutes = ['/signin', '/register', '/']
+import { PROTECTED_ROUTES } from './lib/utils/constants'
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.includes(path)
+  const isProtectedRoute = PROTECTED_ROUTES.includes(path)
 
   if (isProtectedRoute) {
     const isVerified = await verifySession()
