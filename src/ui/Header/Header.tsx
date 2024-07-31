@@ -27,7 +27,7 @@ export default function Header() {
           <NavBar />
         </div>
 
-        {/* <SearchBar mobile /> */}
+        <SearchBar mobile />
       </div>
     </div>
   )

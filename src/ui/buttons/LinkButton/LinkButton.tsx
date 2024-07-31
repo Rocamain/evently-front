@@ -11,7 +11,11 @@ export default function LinkButton({
   const className = styles[variant][color][size]
 
   return (
-    <Link {...props} className={className} style={{ letterSpacing: '0.01em' }}>
+    <Link
+      {...props}
+      className={className + ' whitespace-nowrap'}
+      style={{ letterSpacing: '0.01em' }}
+    >
       {children}
     </Link>
   )

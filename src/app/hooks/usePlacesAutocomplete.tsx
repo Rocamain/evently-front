@@ -18,23 +18,6 @@ export const usePlacesAutoComplete = () => {
     language: 'en-gb',
   })
 
-  const handleClick = useCallback(
-    (
-      event: React.MouseEvent<HTMLButtonElement>,
-      placeId: string,
-      description: string,
-    ) => {
-      event.preventDefault()
-      if (!isPlacePredictionsLoading) {
-        setShow(false)
-
-        setInputValue(description)
-        setPlaceInfo(placeId)
-      }
-    },
-    [isPlacePredictionsLoading, placesService],
-  )
-
   const setPlaceInfo = (placeId: string) => {
     placesService?.getDetails(
       {
@@ -61,6 +44,24 @@ export const usePlacesAutoComplete = () => {
       },
     )
   }
+
+  const handleClick = useCallback(
+    (
+      event: React.MouseEvent<HTMLButtonElement>,
+      placeId: string,
+      description: string,
+    ) => {
+      event.preventDefault()
+      if (!isPlacePredictionsLoading) {
+        setShow(false)
+
+        setInputValue(description)
+        setPlaceInfo(placeId)
+      }
+    },
+    [isPlacePredictionsLoading],
+  )
+
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       event.preventDefault()

@@ -1,30 +1,33 @@
-import { LinkButtonProps } from '@/types/components/Buttons'
+import { Booking } from '@/types/event/event'
 import LinkButton from '@/ui/buttons/LinkButton/LinkButton'
-import { headers } from 'next/headers'
 import React from 'react'
 interface BookingBarProps {
   children?: React.ReactNode
   eventLocation: string
   time: string
   price: number
-}
-
-const getPath = () => {
-  const headersList = headers()
-  const pathname = headersList.get('x-invoke-path') as string
-  return pathname
+  eventId: String
+  isEventOwner: boolean
+  isAttendee: boolean
+  bookingAteendee: Booking
 }
 
 export const BookingBar: React.FC<BookingBarProps> = ({
   eventLocation,
   time,
   price,
+  eventId,
+  isEventOwner,
+  isAttendee,
+  bookingAteendee,
 }) => {
-  const path = getPath()
   return (
-    <div className="sticky bottom-0 w-full py-5 bg-gray-200/90 z-10">
-      <div className="flex justify-between  hover:bg-gray-200 text-gray-500 mx-4">
-        <div className="hidden sm:flex flex-col justify-center">
+    <div
+      id="BookingBar"
+      className="sticky bottom-0 w-full py-5 bg-gray-200/90 z-10"
+    >
+      <div className="lg:px-20 mx-auto lg:max-w-5xl xl:max-w-7xl flex justify-between  hover:bg-gray-200 text-gray-500 mx-4">
+        <div className="flex flex-col justify-center">
           <div>
             <div className="flex flex-col uppercase leading-5 tracking-tight ">
               <p className="font-semibold">{eventLocation}</p>
@@ -40,16 +43,62 @@ export const BookingBar: React.FC<BookingBarProps> = ({
           <div className="flex items-center justify-around">
             <div className="flex items-center md:block">
               <div className="flex flex-col">
-                <div className="font-semibold text-red-400">
-                  <span>{price === 1 ? 'Free' : `£${price}.00`}</span>
+                <div className="flex flex-col justify-center font-semibold">
+                  <span className="hidden uppercase sm:inline-block">
+                    Price:
+                  </span>
+                  <span className=" text-red-400 ">
+                    {price === 1 ? 'Free' : `£${price}.00`}
+                  </span>
                 </div>
               </div>
             </div>
             <div className="flex items-center space-x-3 sm:space-x-5 ml-5">
               <div className="flex items-center">
-                <LinkButton href="/" color="teal" size="small">
-                  Book
-                </LinkButton>
+                {isAttendee && (
+                  <LinkButton
+                    href={{
+                      pathname: `/booking/${bookingAteendee.bookingId}/cancel`,
+                    }}
+                    color="red"
+                    size="small"
+                  >
+                    Cancel Booking
+                  </LinkButton>
+                )}
+                {isEventOwner && (
+                  <div>
+                    <LinkButton
+                      href={{
+                        pathname: `/event/${eventId}/modify`,
+                      }}
+                      color="teal"
+                      size="small"
+                    >
+                      Modify Event
+                    </LinkButton>
+                    <LinkButton
+                      href={{
+                        pathname: `/event/${eventId}/cancel`,
+                      }}
+                      color="red"
+                      size="small"
+                    >
+                      Cancel Booking
+                    </LinkButton>
+                  </div>
+                )}
+                {!isAttendee && !isEventOwner && (
+                  <LinkButton
+                    href={{
+                      pathname: `/event/${eventId}/book`,
+                    }}
+                    color="teal"
+                    size="small"
+                  >
+                    Book
+                  </LinkButton>
+                )}
               </div>
             </div>
           </div>

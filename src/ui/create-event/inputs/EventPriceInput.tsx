@@ -17,7 +17,7 @@ const allowedKeys = [
   'ArrowRight',
   'Delete',
 ]
-export default function eventPriceInput({ error }: { error?: string[] }) {
+export default function EventPriceInput({ error }: { error?: string[] }) {
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       const { key, currentTarget } = event

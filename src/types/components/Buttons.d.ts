@@ -1,7 +1,14 @@
-import { LinkProps, ButtonProps } from 'next/link'
+import { LinkProps } from 'next/link'
 import { ButtonHTMLAttributes } from 'react'
+import React from 'react'
 
-interface Button {}
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode
+  variant?: 'contained' | 'outlined'
+  color?: 'red' | 'teal'
+  size?: 'small' | 'big'
+  clickHandler: (e: React.MouseEvent<HTMLButtonElement>) => void
+}
 
 export interface LinkButtonProps extends LinkProps {
   children: React.ReactNode
@@ -10,7 +17,8 @@ export interface LinkButtonProps extends LinkProps {
   size?: 'small' | 'big'
 }
 
-export interface ServerButtonProps extends ButtonHTMLAttributes {
+export interface ServerButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode
   variant?: 'contained' | 'outlined'
   color?: 'red' | 'teal'
