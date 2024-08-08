@@ -1,12 +1,46 @@
 'use server'
-import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 import { decryptSessionCookie } from '../auth/session'
 const { DB_URL } = process.env
 
-export async function bookEventAction(
-  state: undefined,
+export type BookActionState =
+  | {
+      error?: string
+      message?: string
+    }
+  | undefined
+
+export type BookAction = (
+  state: BookActionState,
   formData: FormData,
-): Promise<undefined> {
+) => Promise<
+  | {
+      error: string
+      message: undefined
+    }
+  | {
+      error: undefined
+      message: string
+    }
+>
+
+interface User {
+  Username: string
+  UserAttributes: { Name: string; Value: string }[]
+}
+
+interface UserInfo {
+  userId: string
+  userName: string
+  userEmail: string
+  userPicture: string
+}
+
+export async function bookEventAction(
+  state: BookActionState,
+  formData: FormData,
+): Promise<{ error?: string; message?: string }> {
+  const eventId = formData.get('eventId')
   try {
     const session = await decryptSessionCookie()
     const response = await fetch(`${DB_URL}/getuser`, {
@@ -14,18 +48,20 @@ export async function bookEventAction(
       headers: { Authorization: `Bearer ${session.accessToken}` },
     })
 
-    if (!response.ok!) {
-      // do something
+    if (!response.ok) {
+      return {
+        error: 'Something went wrong',
+        message: undefined,
+      }
     }
 
-    const user = await response.json()
+    const user: User = await response.json()
 
-    const userInfo = {
-      userId: user.Username as string,
-      userName:
-        `${user.UserAttributes[2].Value} ${user.UserAttributes[3].Value}` as string,
-      userEmail: user.UserAttributes[0].Value as string,
-      userPicture: user.UserAttributes[4].Value as string,
+    const userInfo: UserInfo = {
+      userId: user.Username,
+      userName: `${user.UserAttributes[2].Value} ${user.UserAttributes[3].Value}`,
+      userEmail: user.UserAttributes[0].Value,
+      userPicture: user.UserAttributes[4].Value,
     }
 
     Object.entries(userInfo).forEach(([key, value]) => formData.set(key, value))
@@ -38,6 +74,16 @@ export async function bookEventAction(
     })
 
     const parsedBody: unknown = await res.json()
-    console.log({ parsedBody })
-  } catch (e) {}
+
+    revalidatePath(`/event/${eventId}`)
+    return {
+      error: undefined,
+      message: 'Booking done',
+    }
+  } catch (e) {
+    return {
+      error: 'Something went wrong',
+      message: undefined,
+    }
+  }
 }
