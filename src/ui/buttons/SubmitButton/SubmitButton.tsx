@@ -14,8 +14,8 @@ export default function SubmitButton({
 
   return (
     <button
-      className={className}
-      style={{ letterSpacing: '0.01em' }}
+      className={className + 'text-md'}
+      style={{ letterSpacing: '0.03em' }}
       type="submit"
       disabled={pending}
       aria-disabled={pending}

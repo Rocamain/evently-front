@@ -1,5 +1,5 @@
 import { EventDescription } from './EventDescription/EventDescription'
-import EventPicture from './EventPicture/EventPicture'
+import { EventMainPicture } from './EventPicture/EventPicture'
 interface EventDetailsProps {
   eventDescription: string
   eventPhotos: string[]
@@ -12,9 +12,9 @@ export const EventDetails = ({
   isOwner,
 }: EventDetailsProps) => {
   return (
-    <div className="relative">
-      <EventPicture eventPicture={eventPhotos} isOwner={isOwner} />
-      <EventDescription eventDescription={eventDescription} isOwner={isOwner} />
+    <div className="relative mb-10">
+      <EventMainPicture eventPicture={eventPhotos} />
+      <EventDescription eventDescription={eventDescription} />
     </div>
   )
 }

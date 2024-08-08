@@ -24,7 +24,7 @@ export const BookingBar: React.FC<BookingBarProps> = ({
   return (
     <div
       id="BookingBar"
-      className="sticky bottom-0 w-full py-5 bg-gray-200/90 z-10"
+      className="sticky bottom-0 w-full py-5  md:px-10 bg-gray-200/90 z-10 "
     >
       <div className="lg:px-20 mx-auto lg:max-w-5xl xl:max-w-7xl flex justify-between  hover:bg-gray-200 text-gray-500 mx-4">
         <div className="flex flex-col justify-center">
@@ -67,7 +67,7 @@ export const BookingBar: React.FC<BookingBarProps> = ({
                   </LinkButton>
                 )}
                 {isEventOwner && (
-                  <div>
+                  <div className="flex gap-4">
                     <LinkButton
                       href={{
                         pathname: `/event/${eventId}/modify`,
@@ -75,7 +75,7 @@ export const BookingBar: React.FC<BookingBarProps> = ({
                       color="teal"
                       size="small"
                     >
-                      Modify Event
+                      Modify
                     </LinkButton>
                     <LinkButton
                       href={{
@@ -84,7 +84,7 @@ export const BookingBar: React.FC<BookingBarProps> = ({
                       color="red"
                       size="small"
                     >
-                      Cancel Booking
+                      Cancel
                     </LinkButton>
                   </div>
                 )}
