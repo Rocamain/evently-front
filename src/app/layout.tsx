@@ -34,7 +34,7 @@ export default function RootLayout({
       <GoogleMapsProvider>
         <body className={inter.className + ' overscroll-none'}>
           <Header />
-          <main id={'background-blob'} className="min-h-full">
+          <main id="background-blob" className="min-h-full mt-4">
             {children}
             {modal}
           </main>
