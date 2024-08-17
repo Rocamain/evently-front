@@ -1,6 +1,7 @@
 'use server'
 import { EventByID } from '@/types/event/event'
 import { decryptSessionCookie } from '@/lib/auth/session'
+import { revalidatePath } from 'next/cache'
 const { DB_URL } = process.env
 
 type UserInfoResponse = { userId: string | undefined }
@@ -29,8 +30,10 @@ export const getUserData = async (): Promise<UserInfoResponse> => {
 export const getEventData = async (eventId: string) => {
   const response = await fetch(`${DB_URL}/item/${eventId}`, {
     method: 'GET',
+    next: { tags: ['eventId'] },
   })
   const parsedData: EventByID = await response.json()
 
+  revalidatePath(`/event/${eventId}`)
   return parsedData
 }
