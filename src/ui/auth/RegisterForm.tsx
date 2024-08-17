@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect, ChangeEvent } from 'react'
-import { useRouter } from 'next/navigation'
 import FormHeader from '@/ui/auth/AuthForm/FormHeader'
 import { register } from '@/lib/auth/action'
 import { useAuthForm } from '@/app/hooks/useAuthForm'
@@ -19,10 +18,7 @@ export default function RegisterForm() {
   const { state, dispatch, formRef, inputRef, messageRef } = useAuthForm({
     action: register,
   })
-  const router = useRouter()
-  useEffect(() => {
-    if (state?.message === 'Register Successful') router.replace('/signin')
-  }, [state, router])
+
   const handleChange = () => {
     if (state?.errors) {
       if (messageRef.current) messageRef.current.textContent = null
@@ -51,7 +47,7 @@ export default function RegisterForm() {
       <form
         ref={formRef}
         action={dispatch}
-        className="pt-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7"
+        className="pt-6 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7"
       >
         <div className="flex content-center">
           <label htmlFor="email" className="flex content-center mr-2">
@@ -182,18 +178,23 @@ export default function RegisterForm() {
               state?.errors?.password?.[0] ||
               state?.errors?.passwordConfirmation?.[0] ||
               state?.errors?.profilePicture?.[0] ||
-              state?.errors?.dbError}
+              state?.errors?.dbError ||
+              state?.message}
           </p>
         </div>
         <div>
           <div className="pl-[44px] flex gap-6">
-            <SubmitButton color="red" variant="contained">
-              Submit
-            </SubmitButton>
+            {state?.message !== 'Register Successful' && (
+              <SubmitButton color="red" variant="contained">
+                Submit
+              </SubmitButton>
+            )}
 
-            <LinkButton href="/signin" variant="contained">
-              Login
-            </LinkButton>
+            {state?.message === 'Register Successful' && (
+              <LinkButton href="/signin" variant="contained">
+                Login
+              </LinkButton>
+            )}
           </div>
         </div>
       </form>

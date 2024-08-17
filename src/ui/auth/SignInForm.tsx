@@ -30,7 +30,7 @@ export default function SignInForm() {
       <form
         ref={formRef}
         action={dispatch}
-        className="pt-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7"
+        className="pt-6 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7"
       >
         <div className="flex content-center">
           <label htmlFor="email" className="flex content-center mr-2">
@@ -80,7 +80,7 @@ export default function SignInForm() {
               state?.message}
           </p>
         </div>
-        <div className="absolute bottom-4">
+        <div className="bottom-4">
           <div>
             <SubmitButton color="red" variant="contained">
               Submit
