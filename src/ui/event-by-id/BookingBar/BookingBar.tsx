@@ -6,7 +6,7 @@ interface BookingBarProps {
   eventLocation: string
   time: string
   price: number
-  eventId: String
+  eventId: string
   isEventOwner: boolean
   isAttendee: boolean
   bookingAteendee: Booking
@@ -24,12 +24,12 @@ export const BookingBar: React.FC<BookingBarProps> = ({
   return (
     <div
       id="BookingBar"
-      className="sticky bottom-0 w-full py-5  md:px-10 bg-gray-200/90 z-10 "
+      className="sticky bottom-0 w-full p-5  md:px-10 bg-gray-200/90 z-10 "
     >
-      <div className="lg:px-20 mx-auto lg:max-w-5xl xl:max-w-7xl flex justify-between  hover:bg-gray-200 text-gray-500 mx-4">
+      <div className="flex justify-between lg:px-20 mx-auto lg:max-w-5xl xl:max-w-7xl hover:bg-gray-200 text-gray-500">
         <div className="flex flex-col justify-center">
           <div>
-            <div className="flex flex-col uppercase leading-5 tracking-tight ">
+            <div className="flex flex-col uppercase leading-5 tracking-tight">
               <p className="font-semibold">{eventLocation}</p>
             </div>
           </div>
@@ -55,13 +55,14 @@ export const BookingBar: React.FC<BookingBarProps> = ({
             </div>
             <div className="flex items-center space-x-3 sm:space-x-5 ml-5">
               <div className="flex items-center">
-                {isAttendee && (
+                {isAttendee && !isEventOwner && (
                   <LinkButton
                     href={{
-                      pathname: `/booking/${bookingAteendee.bookingId}/cancel`,
+                      pathname: `/booking/${eventId}/cancel`,
                     }}
                     color="red"
                     size="small"
+                    scroll={false}
                   >
                     Cancel Booking
                   </LinkButton>
@@ -74,6 +75,7 @@ export const BookingBar: React.FC<BookingBarProps> = ({
                       }}
                       color="teal"
                       size="small"
+                      scroll={false}
                     >
                       Modify
                     </LinkButton>
@@ -83,6 +85,7 @@ export const BookingBar: React.FC<BookingBarProps> = ({
                       }}
                       color="red"
                       size="small"
+                      scroll={false}
                     >
                       Cancel
                     </LinkButton>
@@ -93,6 +96,7 @@ export const BookingBar: React.FC<BookingBarProps> = ({
                     href={{
                       pathname: `/event/${eventId}/book`,
                     }}
+                    scroll={false}
                     color="teal"
                     size="small"
                   >

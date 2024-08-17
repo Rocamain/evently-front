@@ -1,10 +1,6 @@
 import { Attendee } from '@/types/event/event'
 import Image from 'next/image'
 
-interface RestOfAttendeeProps {
-  restOfAttendees: Array<Attendee>
-}
-
 export default function EventRestOfAttendeesCard({
   restOfAttendees,
 }: {
@@ -39,7 +35,7 @@ export default function EventRestOfAttendeesCard({
               />
               {isLast && (
                 <div className="absolute left-[50%] bottom-[35%] z-10 text-xl font-bold text-white">
-                  +2
+                  {`+${totalRestOfAttendees}`}
                 </div>
               )}
             </div>

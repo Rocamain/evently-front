@@ -1,35 +1,41 @@
 'use client'
 import { useFormState } from 'react-dom'
-import Image from 'next/image'
+import { useEffect } from 'react'
+import useModal from '@/app/hooks/useModal'
 import { bookEventAction } from '@/lib/book-event/actions'
 import SubmitButton from '../buttons/SubmitButton/SubmitButton'
-export default function BookEvent({ eventId }: { eventId: string }) {
+
+export default function BookEvent({
+  eventId,
+  hasBooking,
+}: {
+  eventId: string
+  hasBooking: boolean
+}) {
   const [state, dispatch] = useFormState(bookEventAction, undefined)
-  console.log(state)
+
+  const { onDismiss } = useModal()
+
+  useEffect(() => {
+    if (state?.message === 'Booking done') {
+      onDismiss()
+    }
+  }, [state])
+
+  if (hasBooking) {
+    return <h3>Event already booked</h3>
+  }
   return (
-    <div className="flex flex-col items-center">
-      <div className="mb-6">
-        <Image
-          src="/images/Logo.png"
-          alt="Evently logo"
-          width={150}
-          height={70}
-          priority={true}
-        />
-      </div>
-      <form action={dispatch}>
-        <div className="p-6 h-[400px] w-[400px]">
-          Press Book now button to confirm your booking
-          <label htmlFor="eventId" className="sr-only"></label>
-          <input
-            type="text"
-            className="hidden"
-            name="eventId"
-            defaultValue={eventId}
-          />
-          <SubmitButton>Book now</SubmitButton>
-        </div>
-      </form>
-    </div>
+    <form action={dispatch}>
+      <h6>Press Book now button to confirm your booking</h6>
+      <label htmlFor="eventId" className="sr-only"></label>
+      <input
+        type="text"
+        className="hidden"
+        name="eventId"
+        defaultValue={eventId}
+      />
+      <SubmitButton>Book now</SubmitButton>
+    </form>
   )
 }
