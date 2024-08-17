@@ -8,6 +8,7 @@ import { GoogleMapsProvider } from './hooks/GoogleMapsContext'
 
 const inter = Inter({
   subsets: ['latin'],
+  weight: ['400', '700'],
   preload: true,
 })
 export const metadata: Metadata = {
@@ -34,7 +35,7 @@ export default function RootLayout({
       <GoogleMapsProvider>
         <body className={inter.className + ' overscroll-none'}>
           <Header />
-          <main id={'background-blob'} className="min-h-full">
+          <main id="background-blob" className="relative mt-4">
             {children}
             {modal}
           </main>

@@ -3,6 +3,7 @@
 import React, { useState, useCallback } from 'react'
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService'
 import { EventLocation } from '@/types/event/event'
+const apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY
 export const usePlacesAutoComplete = () => {
   const [placeSelected, setPlaceSelected] = useState<EventLocation | null>(null)
   const [show, setShow] = useState(false)
@@ -14,6 +15,7 @@ export const usePlacesAutoComplete = () => {
     getPlacePredictions,
     isPlacePredictionsLoading,
   } = usePlacesService({
+    apiKey,
     debounce: 350,
     language: 'en-gb',
   })

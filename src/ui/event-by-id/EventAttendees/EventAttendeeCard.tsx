@@ -10,7 +10,7 @@ export const AttendeeCard: React.FC<AttendeeProps> = ({ attendee }) => {
   const { userId, userName, userPicture, isHost } = attendee
   return (
     <a href={`/user/${userId}`} className="hover:no-underline">
-      <div className="flex flex-col bg-white rounded-md py-5 px-2 items-center relative shadow-[0px_0px_5px_0px_rgba(0,0,0,0.12)] h-[182px] max-w[150px] min-w-[125px]">
+      <div className="flex flex-col bg-white rounded-md py-5 px-2 items-center relative shadow-[0px_0px_5px_0px_rgba(0,0,0,0.12)] h-[182px] max-w[120px] min-w-[105px]">
         {isHost && (
           <div className="bg-amber-400 text-white font-semibold text-xs py-[5px] px-[7px] rounded-md absolute left-2 -top-3">
             Host

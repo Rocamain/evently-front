@@ -24,7 +24,6 @@ export type AuthActionState =
       errors?: {
         name?: string[] | undefined
         surname?: string[] | undefined
-        name?: string[]
         email?: string[]
         password?: string[]
         passwordConfirmation?: string[]

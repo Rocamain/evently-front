@@ -36,12 +36,14 @@ export default function PlacesAutoCompleteInput() {
           onBlur={handleInputBlur}
           value={inputValue}
         />
-        <input
-          name="eventLocation"
-          type="text"
-          className="hidden"
-          defaultValue={placeSelected ? JSON.stringify(placeSelected) : ''}
-        />
+        {placeSelected! !== null && (
+          <input
+            name="eventLocation"
+            type="text"
+            className="hidden"
+            defaultValue={JSON.stringify(placeSelected)}
+          />
+        )}
       </div>
       {show && (
         <ul className="flex flex-col absolute rounded-b-lg border z-20 border-gray-300 bg-white w-full">

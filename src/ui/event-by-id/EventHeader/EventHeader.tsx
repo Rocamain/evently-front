@@ -14,7 +14,7 @@ export const EventHeader = ({
   eventOwnerPicture,
 }: EventHeaderProps) => {
   return (
-    <div className="py-6">
+    <div className="pb-6">
       {children}
       <Link href="/#" className="flex flex-row items-center mt-2 lg:mt-4">
         <ProfilePicture picture={eventOwnerPicture} />

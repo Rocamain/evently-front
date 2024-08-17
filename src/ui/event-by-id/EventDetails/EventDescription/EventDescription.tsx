@@ -1,13 +1,10 @@
 'use client'
 import { useRef } from 'react'
-import { EventDescriptionEdit } from './EventDescriptionEdit'
-import { generateHTML } from '@tiptap/html'
 import { EditorContent } from '@tiptap/react'
 import { useEditor } from '@tiptap/react'
 
 interface EventDetailsProps {
   eventDescription: string
-  isOwner: boolean
 }
 import StarterKit from '@tiptap/starter-kit'
 import {
@@ -15,11 +12,9 @@ import {
   CustomHeading as Header,
   CustomParagraph as Paragraph,
 } from '@/lib/titap-custom'
-// const extensions = [StarterKit, List, Header, Paragraph]
 
 export const EventDescription: React.FC<EventDetailsProps> = ({
   eventDescription,
-  isOwner,
 }) => {
   const tiptap = useRef<null | HTMLDivElement>(null)
 

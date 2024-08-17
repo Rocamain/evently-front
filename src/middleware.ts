@@ -3,9 +3,23 @@ import { verifySession } from './lib/auth/session'
 import { PROTECTED_ROUTES } from './lib/utils/constants'
 
 export async function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname
-  const isProtectedRoute = PROTECTED_ROUTES.includes(path)
+  var pathname: string = request.nextUrl.pathname
 
+  if (pathname.startsWith('/event')) {
+    // Dynamic params eventId  rename pathname to indentify a protected route
+    const paths = pathname.split('/')
+    paths[2] = '[eventId]'
+    pathname = paths.join(' ').replaceAll(' ', '/')
+  }
+
+  if (pathname.startsWith('/booking')) {
+    // Dynamic params bookingId rename pathname to indentify a protected route
+    const paths = pathname.split('/')
+    paths[2] = '[bookingId]'
+    pathname = paths.join(' ').replaceAll(' ', '/')
+  }
+
+  const isProtectedRoute = PROTECTED_ROUTES.includes(pathname)
   if (isProtectedRoute) {
     const isVerified = await verifySession()
 

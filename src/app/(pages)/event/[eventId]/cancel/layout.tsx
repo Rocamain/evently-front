@@ -1,21 +1,16 @@
 import React, { ReactNode } from 'react'
-import AuthWrapper from '@/ui/auth/AuthWrapper'
 import Image from 'next/image'
-import { getBooking } from '@/lib/booking/action'
+import AuthWrapper from '@/ui/auth/AuthWrapper'
 
-export default async function LayoutBookEventPage({
+export default function LayoutCancelEventPage({
   children,
-  params: { eventId },
 }: {
   children: ReactNode
-  params: { eventId: string }
 }) {
-  const booking = await getBooking({ eventId })
-
   return (
     <AuthWrapper>
       <div className="flex flex-col items-center justify-center">
-        <div>
+        <div className="mb-6">
           <Image
             src="/images/Logo.png"
             alt="Evently logo"
@@ -24,7 +19,7 @@ export default async function LayoutBookEventPage({
             priority={true}
           />
         </div>
-        <div className="p-6">{children}</div>
+        {children}
       </div>
     </AuthWrapper>
   )

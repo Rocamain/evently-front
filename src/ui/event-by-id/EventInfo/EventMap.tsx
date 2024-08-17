@@ -28,7 +28,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ lat, lng }) => {
     <GoogleMap
       mapContainerStyle={{
         ...containerStyle,
-        width: isDesktop ? '368px' : '100%',
+        width: isDesktop ? '100%' : '100%',
         border: 'none', // Example of conditional styling
       }}
       center={coords}
