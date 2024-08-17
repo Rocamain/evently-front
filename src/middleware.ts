@@ -10,7 +10,6 @@ export async function middleware(request: NextRequest) {
     const paths = pathname.split('/')
     paths[2] = '[eventId]'
     pathname = paths.join(' ').replaceAll(' ', '/')
-    console.log({ pathname })
   }
 
   if (pathname.startsWith('/booking')) {
