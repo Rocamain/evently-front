@@ -22,7 +22,7 @@ export default function ProfilePicture({
         <Image
           src={picture}
           alt="profile picture"
-          className="rounded-full object-cover h-[74px] w-auto"
+          className="rounded-full object-cover"
           width="74"
           height="74"
         />
