@@ -2,6 +2,7 @@ import LinkButton from '@/ui/buttons/LinkButton/LinkButton'
 import { verifySession } from '@/lib/auth/session'
 import { logout } from '@/lib/auth/action'
 import SubmitButton from '@/ui/buttons/SubmitButton/SubmitButton'
+import MenuButton from '../Menu/MenuButton'
 
 export default async function NavBar() {
   const isVerifiedSession = await verifySession()
@@ -12,30 +13,35 @@ export default async function NavBar() {
         {isVerifiedSession ? (
           <>
             <li>
-              <LinkButton variant="contained" href="/dashboard">
-                Dashboard
-              </LinkButton>
-            </li>
-            <li>
-              <LinkButton variant="contained" href="/create-event">
-                Create Event
-              </LinkButton>
+              <MenuButton />
             </li>
             <li>
               <form action={logout}>
-                <SubmitButton color="red">Logout</SubmitButton>
+                <SubmitButton size="small" color="red">
+                  Logout
+                </SubmitButton>
               </form>
             </li>
           </>
         ) : (
           <>
             <li>
-              <LinkButton variant="contained" color="teal" href="/register">
+              <LinkButton
+                size="small"
+                variant="contained"
+                color="teal"
+                href="/register"
+              >
                 Register
               </LinkButton>
             </li>
             <li>
-              <LinkButton variant="contained" color="red" href="/signin">
+              <LinkButton
+                size="small"
+                variant="contained"
+                color="red"
+                href="/signin"
+              >
                 Log in
               </LinkButton>
             </li>
