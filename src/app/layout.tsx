@@ -5,7 +5,8 @@ import './globals.css'
 import Header from '@/ui/Header/Header'
 import Script from 'next/script'
 import { GoogleMapsProvider } from './hooks/GoogleMapsContext'
-
+import { MenuProvider } from '@/app/context/menu/MenuContext'
+import Menu from '@/ui/Header/Menu/Menu'
 const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '700'],
@@ -34,11 +35,14 @@ export default function RootLayout({
 
       <GoogleMapsProvider>
         <body className={inter.className + ' overscroll-none'}>
-          <Header />
-          <main id="background-blob" className="relative mt-4">
-            {children}
-            {modal}
-          </main>
+          <MenuProvider>
+            <Header />
+            <Menu />
+            <main id="background-blob" className="relative mt-4">
+              {children}
+              {modal}
+            </main>
+          </MenuProvider>
           <footer
             style={{
               height: '25vh',
