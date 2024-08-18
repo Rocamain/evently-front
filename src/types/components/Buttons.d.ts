@@ -15,6 +15,7 @@ export interface LinkButtonProps extends LinkProps {
   variant?: 'contained' | 'outlined'
   color?: 'red' | 'teal'
   size?: 'small' | 'big'
+  target?: string
 }
 
 export interface ServerButtonProps
