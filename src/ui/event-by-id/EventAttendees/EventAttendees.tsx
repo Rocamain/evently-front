@@ -34,9 +34,7 @@ export const EventAttendees: React.FC<EventAttendeesProps> = ({
         <div className="bg-white rounded-lg lg:border lg:border-gray-300">
           <div className="grid grid-flow-col p-6 gap-6 sm:grid-flow-row sm:grid-cols-4 overflow-auto">
             <AttendeeCard attendee={host} />
-            {attendees && (
-              <EventBookingAttendees attendees={attendees} eventId={eventId} />
-            )}
+            {attendees && <EventBookingAttendees attendees={attendees} />}
           </div>
         </div>
       </div>
