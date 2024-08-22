@@ -1,7 +1,7 @@
 'use client'
 import { useMenu } from '@/app/context/menu/MenuContext'
 import Link from 'next/link'
-import { XMarkIcon } from '@heroicons/react/16/solid'
+import { XMarkIcon, PowerIcon } from '@heroicons/react/16/solid'
 import {
   HomeIcon,
   PaintBrushIcon,
@@ -10,6 +10,8 @@ import {
   CalendarDaysIcon,
   TicketIcon,
 } from '@heroicons/react/24/outline'
+import LogoutButton from './LogoutButton'
+import { logout } from '@/lib/auth/action'
 
 export default function Menu() {
   const { open, setOpen } = useMenu()
@@ -21,7 +23,7 @@ export default function Menu() {
       }`}
     >
       <div className="flex">
-        <div className="border-r-2 border-gray-300">
+        <div className="border-r-2 mt-2 border-gray-300">
           <XMarkIcon
             onClick={() => setOpen(false)}
             className="w-[3rem] h-[3rem] text-red-400 cursor-pointer"
@@ -114,6 +116,15 @@ export default function Menu() {
           </li>
         </ul>
       </div>
+      <form
+        action={async () => {
+          await logout()
+          setOpen(false)
+        }}
+        className="px-3 py-4 border-2 border-gray-300"
+      >
+        <LogoutButton />
+      </form>
     </div>
   )
 }
