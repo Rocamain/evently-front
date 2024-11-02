@@ -9,11 +9,11 @@ export async function middleware(request: NextRequest) {
       request.headers.get('x-forwarded-for') || request.ip || '127.0.0.1'
 
     // Use ipapi for geolocation lookup
-    const response = await fetch(`https://ipapi.co/${ip}/json/`)
-    const geoData = await response.json()
+    // const response = await fetch(`https://ipapi.co/${ip}/json/`)
+    // const geoData = await response.json()
 
-    const { city, region } = geoData
-    console.log('Middleware', { geoData })
+    // const { city, region } = geoData
+    console.log('Middleware', { geoData: request.geo, ip })
   }
   if (pathname.startsWith('/event')) {
     // Dynamic params eventId  rename pathname to indentify a protected route
