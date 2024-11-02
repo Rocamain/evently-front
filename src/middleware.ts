@@ -4,7 +4,17 @@ import { PROTECTED_ROUTES } from './lib/utils/constants'
 
 export async function middleware(request: NextRequest) {
   var pathname: string = request.nextUrl.pathname
+  if (pathname === '/') {
+    const ip =
+      request.headers.get('x-forwarded-for') || request.ip || '127.0.0.1'
 
+    // Use ipapi for geolocation lookup
+    const response = await fetch(`https://ipapi.co/${ip}/json/`)
+    const geoData = await response.json()
+
+    const { city, region } = geoData
+    console.log('Middleware', { geoData })
+  }
   if (pathname.startsWith('/event')) {
     // Dynamic params eventId  rename pathname to indentify a protected route
     const paths = pathname.split('/')
