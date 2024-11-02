@@ -1,7 +1,7 @@
 // app/page.tsx
 import Hero from '@/ui/home/Hero/Hero'
 import EventsHome from '@/ui/home/EventsHome/EventsHome'
-import EventsCooking from '@/ui/home/EventsCooking/EventsCooking'
+// import EventsCooking from '@/ui/home/EventsCooking/EventsCooking'
 
 type Location = {
   city: string

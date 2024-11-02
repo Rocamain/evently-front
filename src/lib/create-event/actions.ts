@@ -99,7 +99,6 @@ export async function CreateEventAction(
         },
       }
     }
-
     return {
       errors: validatedFields.error.flatten().fieldErrors,
     }
@@ -152,9 +151,9 @@ export async function CreateEventAction(
     })
 
     const parsedBody: Event = await res.json()
-
-    if (parsedBody?.error) {
-      return parsedBody.error
+    console.log({ parsedBody })
+    if (parsedBody?.data?.error) {
+      return parsedBody.data.error
     }
 
     return { message: 'Event created', eventId: parsedBody.data.eventId }
