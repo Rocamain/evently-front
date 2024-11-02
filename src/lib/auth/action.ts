@@ -47,13 +47,10 @@ export async function register(state: AuthActionState, formData: FormData) {
     const data = await response.json() // type this
 
     if (!response.ok) {
-      return { errors: { dbError: data.message }, message: undefined }
-    }
-    if (data.error) {
       return { errors: { dbError: data.error.message }, message: undefined }
-    } else {
-      return { errors: undefined, message: 'Register Successful' }
     }
+
+    return { errors: undefined, message: 'Register Successful' }
   } catch (e) {
     return { errors: undefined, message: 'Register Unsuccessful' }
   }
