@@ -1,7 +1,42 @@
 // app/page.tsx
 import Hero from '@/ui/home/Hero/Hero'
 import EventsHome from '@/ui/home/EventsHome/EventsHome'
+import { Booking, Evento, Events } from '@/types/event/event'
+
+const { DB_URL } = process.env
+
 // import EventsCooking from '@/ui/home/EventsCooking/EventsCooking'
+
+const EventsFetcher = async (): Promise<Events> => {
+  const response = await fetch(
+    `${DB_URL}/items/byUser/event?withBookings=true`,
+    {
+      method: 'GET',
+      next: { revalidate: 0 },
+    },
+  )
+
+  const parsedData: Array<{ items: Array<Evento | Booking>; count: number }> =
+    await response.json()
+
+  const isEvent = (item: Evento | Booking): item is Evento => {
+    return item.type === 'event'
+  }
+
+  const events = parsedData.map(({ items }) => {
+    const eventIndex = items.findIndex(isEvent)
+    if (eventIndex === -1) {
+      throw new Error('No event found in items.')
+    }
+
+    const event = items[eventIndex] as Evento
+
+    const bookings = items.filter((item) => item !== event) as Booking[]
+    return { event, bookings }
+  })
+
+  return events
+}
 
 type Location = {
   city: string
@@ -29,7 +64,9 @@ async function getLocationData(ip: string) {
 
 // Server component to fetch data on the server
 export default async function HomePage() {
-  console.log(process.env)
+  const events = await EventsFetcher()
+
+  console.log(events)
   // Get the IP address
   // const ip = '127.0.0.1' // Placeholder for localhost; consider adjusting for production
   // const location = await getLocationData(ip)
