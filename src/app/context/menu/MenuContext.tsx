@@ -6,6 +6,7 @@ import React, {
   ReactNode,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from 'react'
 
 interface MenuContextProps {
@@ -17,6 +18,20 @@ const MenuContext = createContext<MenuContextProps | undefined>(undefined)
 
 export const MenuProvider = ({ children }: { children: ReactNode }) => {
   const [open, setOpen] = useState<boolean>(false)
+  useEffect(() => {
+    if (open) {
+      // Disable scrolling on the body when the menu is open
+      document.body.style.overflow = 'hidden'
+    } else {
+      // Re-enable scrolling on the body when the menu is closed
+      document.body.style.overflow = ''
+    }
+
+    // Clean up the effect
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [open])
 
   return (
     <MenuContext.Provider value={{ open, setOpen }}>

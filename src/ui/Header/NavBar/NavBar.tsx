@@ -9,13 +9,13 @@ export default async function NavBar() {
 
   return (
     <nav className="flex-grow-0">
-      <ul className=" flex justify-end space-x-4 items-center">
+      <ul className=" flex justify-end md:space-x-4 items-center">
         {isVerifiedSession ? (
           <>
             <li>
               <MenuButton />
             </li>
-            <li>
+            <li className="hidden md:block">
               <form action={logout}>
                 <SubmitButton size="small" color="red">
                   Logout

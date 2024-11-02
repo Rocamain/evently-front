@@ -6,16 +6,21 @@ export default function MenuButton() {
   const { open, setOpen } = useMenu()
   if (open) {
     return (
-      <XMarkIcon
-        onClick={() => setOpen(false)}
-        className="w-[3rem] h-[3rem] text-red-400 cursor-pointer"
-      />
+      <div className=" w-[3rem] h-[3rem]">
+        <XMarkIcon
+          onClick={() => setOpen(false)}
+          className="w-full h-full text-red-400 cursor-pointer"
+          viewBox="2 2 12 12"
+        />
+      </div>
     )
   }
   return (
-    <BurgerIcon
-      onClick={() => setOpen((prev) => !prev)}
-      className="w-[2.5rem] h-[2.5rem] text-teal-600 cursor-pointer"
-    />
+    <div className="w-[3rem] h-[3rem] flex items-center">
+      <BurgerIcon
+        onClick={() => setOpen((prev) => !prev)}
+        className="w-full h-full text-teal-600 cursor-pointer"
+      />
+    </div>
   )
 }
