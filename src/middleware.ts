@@ -4,10 +4,14 @@ import { PROTECTED_ROUTES } from './lib/utils/constants'
 
 export async function middleware(request: NextRequest) {
   var pathname: string = request.nextUrl.pathname
+  const response = NextResponse.next()
   if (pathname === '/') {
     const ip =
       request.headers.get('x-forwarded-for') || request.ip || '127.0.0.1'
-
+    const city = request.geo?.city
+    if (city) {
+      response.headers.set('X-City', city)
+    }
     // Use ipapi for geolocation lookup
     // const response = await fetch(`https://ipapi.co/${ip}/json/`)
     // const geoData = await response.json()
@@ -36,7 +40,7 @@ export async function middleware(request: NextRequest) {
     if (!isVerified) return NextResponse.redirect(new URL('/', request.nextUrl))
   }
 
-  return NextResponse.next()
+  return response
 }
 
 export const config = {
