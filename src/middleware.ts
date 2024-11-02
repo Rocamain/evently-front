@@ -1,9 +1,11 @@
-import { type NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse, userAgent } from 'next/server'
 import { verifySession } from './lib/auth/session'
 import { PROTECTED_ROUTES } from './lib/utils/constants'
 
 export async function middleware(request: NextRequest) {
   var pathname: string = request.nextUrl.pathname
+  const ua = userAgent(request)
+  console.log({ ua })
   const response = NextResponse.next()
   if (pathname === '/') {
     const ip =
