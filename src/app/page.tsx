@@ -7,8 +7,17 @@ import { Booking, Evento, Events } from '@/types/event/event'
 const { DB_URL } = process.env
 
 // import EventsCooking from '@/ui/home/EventsCooking/EventsCooking'
-
-const EventsFetcher = async (): Promise<Events> => {
+interface EventFetchParams {
+  city: string | null
+  latitude: string | null
+  longitude: string | null
+}
+const EventsFetcher = async ({
+  city,
+  latitude,
+  longitude,
+}: EventFetchParams): Promise<Events> => {
+  console.log({ city, latitude, longitude })
   const response = await fetch(
     `${DB_URL}/items/byUser/event?withBookings=true`,
     {
@@ -47,7 +56,15 @@ type Location = {
 }
 
 // Define an async function to fetch location data
-async function getLocationData(ip: string) {
+async function getLocationData({
+  city,
+  longitude,
+  latitude,
+}: {
+  city: string | null
+  longitude: number | null
+  latitude: number | null
+}) {
   const response = await fetch(`https://ipapi.co/${'208.67.222.222'}/json/`)
   const geoData = await response.json()
   console.log({ response, geoData })
@@ -67,8 +84,10 @@ async function getLocationData(ip: string) {
 export default async function HomePage() {
   const headersList = await headers()
   const city = headersList.get('X-City')
-  console.log({ city })
-  const events = await EventsFetcher()
+  const latitude = headersList.get('X-Latitude')
+  const longitude = headersList.get('X-Longitude')
+
+  const events = await EventsFetcher({ city, latitude, longitude })
 
   console.log(events)
   // Get the IP address

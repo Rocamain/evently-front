@@ -4,44 +4,41 @@ import { PROTECTED_ROUTES } from './lib/utils/constants'
 
 export async function middleware(request: NextRequest) {
   var pathname: string = request.nextUrl.pathname
-  const ua = userAgent(request)
-  console.log({ ua })
+  const { ua } = userAgent(request)
+
   const response = NextResponse.next()
-  if (pathname === '/') {
-    const ip =
-      request.headers.get('x-forwarded-for') || request.ip || '127.0.0.1'
-    const city = request.geo?.city
-    if (city) {
-      response.headers.set('X-City', city)
+
+  if (pathname === '/' && ua !== 'Vercel Edge Functions') {
+    const geo = request.geo
+    if (geo?.city && geo?.latitude && geo?.longitude) {
+      response.headers.set('X-City', geo.city)
+      response.headers.set('X-Latitude', geo.latitude)
+      response.headers.set('X-Longitude', geo.longitude)
+
+      console.log('Middleware', { geoData: request.geo })
     }
-    // Use ipapi for geolocation lookup
-    // const response = await fetch(`https://ipapi.co/${ip}/json/`)
-    // const geoData = await response.json()
+    if (pathname.startsWith('/event')) {
+      // Dynamic params eventId  rename pathname to indentify a protected route
+      const paths = pathname.split('/')
+      paths[2] = '[eventId]'
+      pathname = paths.join(' ').replaceAll(' ', '/')
+    }
 
-    // const { city, region } = geoData
-    console.log('Middleware', { geoData: request.geo, ip })
+    if (pathname.startsWith('/booking')) {
+      // Dynamic params bookingId rename pathname to indentify a protected route
+      const paths = pathname.split('/')
+      paths[2] = '[bookingId]'
+      pathname = paths.join(' ').replaceAll(' ', '/')
+    }
+
+    const isProtectedRoute = PROTECTED_ROUTES.includes(pathname)
+    if (isProtectedRoute) {
+      const isVerified = await verifySession()
+
+      if (!isVerified)
+        return NextResponse.redirect(new URL('/', request.nextUrl))
+    }
   }
-  if (pathname.startsWith('/event')) {
-    // Dynamic params eventId  rename pathname to indentify a protected route
-    const paths = pathname.split('/')
-    paths[2] = '[eventId]'
-    pathname = paths.join(' ').replaceAll(' ', '/')
-  }
-
-  if (pathname.startsWith('/booking')) {
-    // Dynamic params bookingId rename pathname to indentify a protected route
-    const paths = pathname.split('/')
-    paths[2] = '[bookingId]'
-    pathname = paths.join(' ').replaceAll(' ', '/')
-  }
-
-  const isProtectedRoute = PROTECTED_ROUTES.includes(pathname)
-  if (isProtectedRoute) {
-    const isVerified = await verifySession()
-
-    if (!isVerified) return NextResponse.redirect(new URL('/', request.nextUrl))
-  }
-
   return response
 }
 
