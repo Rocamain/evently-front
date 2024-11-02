@@ -1,4 +1,5 @@
 // app/page.tsx
+import { headers } from 'next/headers'
 import Hero from '@/ui/home/Hero/Hero'
 import EventsHome from '@/ui/home/EventsHome/EventsHome'
 import { Booking, Evento, Events } from '@/types/event/event'
@@ -64,6 +65,9 @@ async function getLocationData(ip: string) {
 
 // Server component to fetch data on the server
 export default async function HomePage() {
+  const headersList = await headers()
+  const city = headersList.get('X-City')
+  console.log({ city })
   const events = await EventsFetcher()
 
   console.log(events)
