@@ -27,8 +27,10 @@ export interface ValidationErrors {
   eventPictures?: string[] | undefined
   serverError?: string | undefined
 }
+
 interface Event {
   error?: { name: string; message: string }
+
   data: {
     createdAt: string
     type: string
@@ -50,6 +52,7 @@ interface Event {
     eventPictures: string[]
     userId: string
     eventId: string
+    error?: { name: string; message: string }
   }
 }
 
@@ -90,6 +93,14 @@ interface Booking {
   eventCategory: string
   bookingId: string
 }
+
+interface EventWithBookings {
+  event: Evento
+  bookings: Booking[]
+}
+
+type Events = EventWithBookings[]
+
 interface EventByID {
   data: { items: Array<Evento | Booking | Attendee>; count: number }
 }
