@@ -114,7 +114,6 @@ export const usePlacesAutoComplete = (place?: string) => {
     show,
     inputValue,
     placePredictions,
-
     handleClick,
     handleInputChange,
     handleInputFocus,
