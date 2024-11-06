@@ -8,7 +8,7 @@ const INSTRUCTIONS = {
   },
   cards: [
     {
-      icon: '/public/images/instructions/handsUp.svg',
+      icon: '/images/instructions/handsUp.svg',
       title: 'Find an event',
       link: '#',
       text: 'Find the event according our interests and your location, you will find what your are looking for!',

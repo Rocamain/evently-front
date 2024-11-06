@@ -1,9 +1,12 @@
 import Link from 'next/link'
+import fetchGeo from '@/lib/utils/fetchGeo'
 import NavBar from './NavBar/NavBar'
 import Image from 'next/image'
 import SearchBar from './SearchBar/SearchBar'
 import Menu from './Menu/Menu'
-export default function Header() {
+
+export default async function Header() {
+  const { city } = fetchGeo()
   return (
     <>
       <div className="border-b w-full fixed z-50 bg-white top-0 sm:block">
@@ -25,13 +28,13 @@ export default function Header() {
                 </Link>
               </div>
 
-              <SearchBar />
+              <SearchBar city={city} />
             </div>
 
             <NavBar />
           </div>
 
-          <SearchBar mobile />
+          <SearchBar mobile city={city} />
         </div>
       </div>
       <Menu />
