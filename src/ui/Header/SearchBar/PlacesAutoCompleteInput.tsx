@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
 'use client'
 import { usePlacesAutoComplete } from '@/app/hooks/usePlacesAutocomplete'
-type PlacesAutoCompleteInputProps = { place: string }
+type PlacesAutoCompleteInputProps = { city: string }
 
 export default function PlacesAutoCompleteInput({
-  place,
+  city,
 }: PlacesAutoCompleteInputProps) {
   const {
     placeSelected,
@@ -15,7 +15,7 @@ export default function PlacesAutoCompleteInput({
     handleInputChange,
     handleInputFocus,
     handleInputBlur,
-  } = usePlacesAutoComplete(place)
+  } = usePlacesAutoComplete(city)
 
   const inputClassName =
     'outline-none appearance-none text-md text-gray-600 p-3 pl-4 rounded-bl-lg sm:rounded-none border border-gray-400 hover:border-gray-300 focus:border-red-400 hover:z-10 focus:z-10 flex-grow w-full rounded-r-none placeholder:text-gray-500'
@@ -30,7 +30,7 @@ export default function PlacesAutoCompleteInput({
           name="eventLocationSeachBox"
           type="text"
           autoComplete="off"
-          placeholder={placeSelected?.eventLocationAddress || place + ', UK'}
+          placeholder={placeSelected?.eventLocationAddress || city + ', UK'}
           className={inputClassName}
           onChange={handleInputChange}
           onFocus={handleInputFocus}

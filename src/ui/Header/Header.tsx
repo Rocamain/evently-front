@@ -28,13 +28,13 @@ export default async function Header() {
                 </Link>
               </div>
 
-              <SearchBar place={city} />
+              <SearchBar city={city} />
             </div>
 
             <NavBar />
           </div>
 
-          <SearchBar mobile place={city} />
+          <SearchBar mobile city={city} />
         </div>
       </div>
       <Menu />

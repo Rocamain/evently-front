@@ -2,12 +2,13 @@
 import { WhiteMagnifier } from '@/ui/Icons'
 import SearchByWordsInput from './SearchInput'
 import PlacesAutoCompleteInput from './PlacesAutoCompleteInput'
+import fetchGeo from '@/lib/utils/fetchGeo'
 
 interface SearchBarProps {
   mobile?: boolean
-  place: string
+  city: string
 }
-export default function SearchBar({ mobile = false, place }: SearchBarProps) {
+export default function SearchBar({ mobile = false, city }: SearchBarProps) {
   // PENDING IMPLEMENTATION
   // const searchByWords = async (formData: FormData) => {
   //   'use server'
@@ -23,7 +24,7 @@ export default function SearchBar({ mobile = false, place }: SearchBarProps) {
     >
       <div className="sm:flex w-full">
         <SearchByWordsInput />
-        <PlacesAutoCompleteInput place={place} />
+        <PlacesAutoCompleteInput city={city} />
       </div>
 
       <button
