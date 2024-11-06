@@ -5,9 +5,9 @@ import PlacesAutoCompleteInput from './PlacesAutoCompleteInput'
 
 interface SearchBarProps {
   mobile?: boolean
+  place: string
 }
-
-export default function SearchBar({ mobile = false }: SearchBarProps) {
+export default function SearchBar({ mobile = false, place }: SearchBarProps) {
   // PENDING IMPLEMENTATION
   // const searchByWords = async (formData: FormData) => {
   //   'use server'
@@ -23,7 +23,7 @@ export default function SearchBar({ mobile = false }: SearchBarProps) {
     >
       <div className="sm:flex w-full">
         <SearchByWordsInput />
-        <PlacesAutoCompleteInput />
+        <PlacesAutoCompleteInput place={place} />
       </div>
 
       <button

@@ -1,10 +1,11 @@
 /* eslint-disable camelcase */
 'use client'
-
-import { useState } from 'react'
 import { usePlacesAutoComplete } from '@/app/hooks/usePlacesAutocomplete'
+type PlacesAutoCompleteInputProps = { place: string }
 
-export default function PlacesAutoCompleteInput() {
+export default function PlacesAutoCompleteInput({
+  place,
+}: PlacesAutoCompleteInputProps) {
   const {
     placeSelected,
     show,
@@ -14,11 +15,10 @@ export default function PlacesAutoCompleteInput() {
     handleInputChange,
     handleInputFocus,
     handleInputBlur,
-  } = usePlacesAutoComplete()
+  } = usePlacesAutoComplete(place)
 
   const inputClassName =
     'outline-none appearance-none text-md text-gray-600 p-3 pl-4 rounded-bl-lg sm:rounded-none border border-gray-400 hover:border-gray-300 focus:border-red-400 hover:z-10 focus:z-10 flex-grow w-full rounded-r-none placeholder:text-gray-500'
-
   return (
     <div className="relative flex-grow sm:w-1/2 outline-none">
       <div className="sticky top-0 flex items-center outline-none">
@@ -26,10 +26,11 @@ export default function PlacesAutoCompleteInput() {
           Events location
         </label>
         <input
+          id="eventLocationSeachBox"
           name="eventLocationSeachBox"
           type="text"
           autoComplete="off"
-          placeholder="City, postcode ..."
+          placeholder={placeSelected?.eventLocationAddress || place + ', UK'}
           className={inputClassName}
           onChange={handleInputChange}
           onFocus={handleInputFocus}

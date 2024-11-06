@@ -36,7 +36,6 @@ export default function RootLayout({
         <body className={inter.className + ' overscroll-none'}>
           <MenuProvider>
             <Header />
-
             <main id="background-blob" className="relative mt-4">
               {children}
               {modal}
