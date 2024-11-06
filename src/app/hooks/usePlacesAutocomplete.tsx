@@ -4,7 +4,8 @@ import React, { useState, useCallback } from 'react'
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService'
 import { EventLocation } from '@/types/event/event'
 const apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY
-export const usePlacesAutoComplete = () => {
+
+export const usePlacesAutoComplete = (place?: string) => {
   const [placeSelected, setPlaceSelected] = useState<EventLocation | null>(null)
   const [show, setShow] = useState(false)
   const [inputValue, setInputValue] = useState<string>('')
@@ -34,7 +35,11 @@ export const usePlacesAutoComplete = () => {
         ) {
           const eventLocationLat = placeDetails.geometry.location.lat()
           const eventLocationLng = placeDetails.geometry.location.lng()
-          const eventLocationAddress = placeDetails.formatted_address
+          const eventLocationAddress = placeDetails.formatted_address.includes(
+            placeDetails.name,
+          )
+            ? placeDetails.formatted_address
+            : `${placeDetails.name}, ${placeDetails.formatted_address}`
 
           setPlaceSelected({
             eventLocationId: placeId,
@@ -56,11 +61,11 @@ export const usePlacesAutoComplete = () => {
       event.preventDefault()
       if (!isPlacePredictionsLoading) {
         setShow(false)
-
         setInputValue(description)
         setPlaceInfo(placeId)
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isPlacePredictionsLoading],
   )
 
@@ -80,22 +85,28 @@ export const usePlacesAutoComplete = () => {
   const handleInputFocus = useCallback(
     (event: React.FocusEvent<HTMLInputElement>) => {
       event.preventDefault()
-      if (inputValue) {
-        setInputValue('')
-      }
+      setInputValue('')
     },
-    [inputValue],
+    [],
   )
 
   const handleInputBlur = useCallback(
     (event: React.FocusEvent<HTMLInputElement>) => {
       event.preventDefault()
-      if (!event.relatedTarget) setShow(false)
+      if (!event.relatedTarget) {
+        if (!placeSelected?.eventLocationAddress && place) {
+          setInputValue(place)
+        }
+        if (placeSelected?.eventLocationAddress) {
+          setInputValue(placeSelected.eventLocationAddress)
+        }
+        setShow(false)
+      }
       if (event.relatedTarget?.id === 'SearchByWordsInput') {
         setShow(false)
       }
     },
-    [],
+    [place, placeSelected],
   )
 
   return {
@@ -103,6 +114,7 @@ export const usePlacesAutoComplete = () => {
     show,
     inputValue,
     placePredictions,
+
     handleClick,
     handleInputChange,
     handleInputFocus,
