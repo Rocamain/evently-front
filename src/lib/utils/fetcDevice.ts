@@ -1,9 +1,11 @@
 import { headers } from 'next/headers'
-
-function fetchDevice() {
-  const headersList = headers()
+type Device = {
+  type: string
+}
+async function fetchDevice() {
+  const headersList = await headers()
   const device = headersList.get('X-Device')!
-
+  console.log(typeof device, device)
   return device
 }
 

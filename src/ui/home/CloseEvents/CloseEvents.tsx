@@ -45,7 +45,7 @@ const EventsFetcher = async ({
 }
 
 export default async function CloseEvents() {
-  const { city, latitude, longitude } = fetchGeo()
+  const { city, latitude, longitude } = await fetchGeo()
 
   const closeEvents = await EventsFetcher({ city, latitude, longitude })
 

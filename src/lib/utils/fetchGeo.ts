@@ -1,6 +1,6 @@
 import { headers } from 'next/headers'
 
-function fetchGeo() {
+async function fetchGeo() {
   const headersList = headers()
   const city = headersList.get('X-City') || 'Brighouse'
   const latitude = headersList.get('X-Latitude') || '53.7012'

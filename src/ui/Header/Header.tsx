@@ -7,10 +7,10 @@ import Menu from './Menu/Menu'
 import fetchDevice from '@/lib/utils/fetcDevice'
 
 export default async function Header() {
-  const { city } = fetchGeo()
-  const device = fetchDevice()
-
-  if (device === ' mobile') {
+  const { city } = await fetchGeo()
+  const device = await fetchDevice()
+  console.log('header, device', device === 'mobile')
+  if (device === 'mobile') {
     return (
       <>
         <div className="border-b w-full fixed z-50 bg-white top-0 sm:block">
@@ -18,7 +18,6 @@ export default async function Header() {
             <div className="flex flex-row items-center justify-between gap-3">
               <NavBar />
             </div>
-
             <SearchBar mobile city={city} />
           </div>
         </div>
@@ -26,6 +25,7 @@ export default async function Header() {
       </>
     )
   }
+  console.log('not true')
 
   return (
     <>
