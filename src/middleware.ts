@@ -4,11 +4,13 @@ import { PROTECTED_ROUTES } from './lib/utils/constants'
 
 export async function middleware(request: NextRequest) {
   var pathname: string = request.nextUrl.pathname
-  const { ua } = userAgent(request)
-
+  const { ua, device } = userAgent(request)
+  console.log('Middleeeee')
   const response = NextResponse.next()
-
+  const viewport = device.type === 'mobile' || 'tablet' ? 'mobile' : 'desktop'
+  console.log(device)
   if (pathname === '/' && ua !== 'Vercel Edge Functions') {
+    response.headers.set('X-device', viewport)
     const geo = request.geo
     if (geo?.city && geo?.latitude && geo?.longitude) {
       response.headers.set('X-City', geo.city)
