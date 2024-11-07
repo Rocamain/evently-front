@@ -2,7 +2,6 @@
 import { WhiteMagnifier } from '@/ui/Icons'
 import SearchByWordsInput from './SearchInput'
 import PlacesAutoCompleteInput from './PlacesAutoCompleteInput'
-import fetchGeo from '@/lib/utils/fetchGeo'
 
 interface SearchBarProps {
   mobile?: boolean

@@ -4,9 +4,29 @@ import NavBar from './NavBar/NavBar'
 import Image from 'next/image'
 import SearchBar from './SearchBar/SearchBar'
 import Menu from './Menu/Menu'
+import fetchDevice from '@/lib/utils/fetcDevice'
 
 export default async function Header() {
-  const { city } = fetchGeo()
+  const { city } = await fetchGeo()
+  const device = await fetchDevice()
+  console.log('header, device', device === 'mobile')
+  if (device === 'mobile') {
+    return (
+      <>
+        <div className="border-b w-full fixed z-50 bg-white top-0 sm:block">
+          <div className="relative z-10 h-22 border-b px-4 py-5 sm:px-6 md:max-w-4xl lg:max-w-6xl xl:px-4 w-full mx-auto">
+            <div className="flex flex-row items-center justify-between gap-3">
+              <NavBar />
+            </div>
+            <SearchBar mobile city={city} />
+          </div>
+        </div>
+        <Menu />
+      </>
+    )
+  }
+  console.log('not true')
+
   return (
     <>
       <div className="border-b w-full fixed z-50 bg-white top-0 sm:block">
@@ -33,8 +53,6 @@ export default async function Header() {
 
             <NavBar />
           </div>
-
-          <SearchBar mobile city={city} />
         </div>
       </div>
       <Menu />
