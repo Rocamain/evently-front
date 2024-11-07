@@ -6,7 +6,9 @@ export async function middleware(request: NextRequest) {
   var pathname: string = request.nextUrl.pathname
   const { ua, device } = userAgent(request)
   const response = NextResponse.next()
-  const viewport = device.type === 'mobile' || 'tablet' ? 'mobile' : 'desktop'
+  const viewport =
+    device.type === 'mobile' || device.type === 'tablet' ? 'mobile' : 'desktop'
+
   if (pathname === '/' && ua !== 'Vercel Edge Functions') {
     response.headers.set('X-device', viewport)
     const url = request.nextUrl
