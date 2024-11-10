@@ -1,15 +1,15 @@
 import Link from 'next/link'
-import fetchGeo from '@/lib/utils/fetchGeo'
+import { fetchGeo } from '@/lib/utils/geo'
 import NavBar from './NavBar/NavBar'
 import Image from 'next/image'
 import SearchBar from './SearchBar/SearchBar'
 import Menu from './Menu/Menu'
 import fetchDevice from '@/lib/utils/fetcDevice'
 
-export default async function Header() {
-  const { city } = await fetchGeo()
+export default async function Header(props: unknown) {
+  const { city, latitude, longitude } = await fetchGeo()
   const device = await fetchDevice()
-  console.log('header, device', device === 'mobile')
+
   if (device === 'mobile') {
     return (
       <>
@@ -18,14 +18,18 @@ export default async function Header() {
             <div className="flex flex-row items-center justify-between gap-3">
               <NavBar />
             </div>
-            <SearchBar mobile city={city} />
+            <SearchBar
+              mobile
+              city={city}
+              latitude={latitude}
+              longitude={longitude}
+            />
           </div>
         </div>
         <Menu />
       </>
     )
   }
-  console.log('not true')
 
   return (
     <>
@@ -48,7 +52,11 @@ export default async function Header() {
                 </Link>
               </div>
 
-              <SearchBar city={city} />
+              <SearchBar
+                city={city}
+                latitude={latitude}
+                longitude={longitude}
+              />
             </div>
 
             <NavBar />

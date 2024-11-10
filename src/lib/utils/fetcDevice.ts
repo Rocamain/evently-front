@@ -1,11 +1,8 @@
-import { headers } from 'next/headers'
-type Device = {
-  type: string
-}
+import { cookies } from 'next/headers'
+
 async function fetchDevice() {
-  const headersList = await headers()
-  const device = headersList.get('X-Device')!
-  console.log(typeof device, device)
+  const cookiesList = await cookies()
+  const device = cookiesList.get('X-Device')?.value
   return device
 }
 

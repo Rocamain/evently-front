@@ -1,29 +1,40 @@
 'use client'
+import { useFormState } from 'react-dom'
 import { WhiteMagnifier } from '@/ui/Icons'
 import SearchByWordsInput from './SearchInput'
 import PlacesAutoCompleteInput from './PlacesAutoCompleteInput'
-
+import { searchEventAction } from '@/lib/searchbar/actions'
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 interface SearchBarProps {
   mobile?: boolean
   city: string
+  longitude: string
+  latitude: string
 }
-export default function SearchBar({ mobile = false, city }: SearchBarProps) {
-  // PENDING IMPLEMENTATION
-  // const searchByWords = async (formData: FormData) => {
-  //   'use server'
-  // }
-
+export default function SearchBar({
+  mobile = false,
+  city,
+  latitude,
+  longitude,
+}: SearchBarProps) {
+  const [state, dispatch] = useFormState<unknown, FormData>(
+    searchEventAction,
+    undefined,
+  )
   const isMobile = mobile ? 'mt-10 mx-auto lg:hidden' : 'hidden'
 
   return (
     <form
-      //action= PENDING IMPLMENTATION
+      action={dispatch}
       className={`realtive grow w-full sm:max-w-xl flex sm:flex-row items-center justify-center lg:flex lg:flex-row lg:items-center ${isMobile}`}
-      onSubmit={(event) => event.preventDefault()}
     >
       <div className="sm:flex w-full">
         <SearchByWordsInput />
-        <PlacesAutoCompleteInput city={city} />
+        <PlacesAutoCompleteInput
+          city={city}
+          longitude={longitude}
+          latitude={latitude}
+        />
       </div>
 
       <button
