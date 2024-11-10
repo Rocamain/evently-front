@@ -1,11 +1,15 @@
 /* eslint-disable camelcase */
 'use client'
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService'
 import { EventLocation } from '@/types/event/event'
 const apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY
 
-export const usePlacesAutoComplete = (place?: string) => {
+export const usePlacesAutoComplete = (place?: {
+  city: string
+  latitude: string
+  longitude: string
+}) => {
   const [placeSelected, setPlaceSelected] = useState<EventLocation | null>(null)
   const [show, setShow] = useState(false)
   const [inputValue, setInputValue] = useState<string>('')
@@ -94,8 +98,8 @@ export const usePlacesAutoComplete = (place?: string) => {
     (event: React.FocusEvent<HTMLInputElement>) => {
       event.preventDefault()
       if (!event.relatedTarget) {
-        if (!placeSelected?.eventLocationAddress && place) {
-          setInputValue(place)
+        if (!placeSelected?.eventLocationAddress && place?.city) {
+          setInputValue(place.city)
         }
         if (placeSelected?.eventLocationAddress) {
           setInputValue(placeSelected.eventLocationAddress)
@@ -114,6 +118,7 @@ export const usePlacesAutoComplete = (place?: string) => {
     show,
     inputValue,
     placePredictions,
+
     handleClick,
     handleInputChange,
     handleInputFocus,

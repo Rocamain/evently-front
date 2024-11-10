@@ -22,12 +22,12 @@ export default function EditLocationButton({
   return (
     <button
       type="button"
-      className="text-red-500 hover:text-red-600 flex items-center group"
+      className="inline text-lg sm:text-2xl text-red-400 hover:text-red-600 group"
       onClick={focusInput}
       onTouchStart={focusInput} // Try to handle both touch and click
     >
-      <span className="mr-1 group-hover:text-teal-600">_{children}</span>
-      <PencilIcon className="h-4 w-4 text-red-500 group-hover:text-teal-600" />
+      <span className="inline mr-1 group-hover:text-teal-600">_{children}</span>
+      <PencilIcon className="inline h-5 w-5 text-red-500 group-hover:text-teal-600" />
     </button>
   )
 }

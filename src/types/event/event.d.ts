@@ -5,7 +5,7 @@ export interface EventAddressInfo {
 
 interface EventLocation {
   eventLocationId: string
-  eventLocationAddress: string | undefined
+  eventLocationAddress: string
   eventLocationLat: number
   eventLocationLng: number
 }

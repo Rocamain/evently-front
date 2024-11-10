@@ -1,5 +1,5 @@
 export const PROTECTED_ROUTES = [
-  '/dashboard',
+  // '/dashboard',
   '/create-event',
   '/event/[eventId]/cancel',
   '/event/[eventId]/modify',

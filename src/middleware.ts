@@ -1,26 +1,24 @@
 import { type NextRequest, NextResponse, userAgent } from 'next/server'
 import { verifySession } from './lib/auth/session'
 import { PROTECTED_ROUTES } from './lib/utils/constants'
+import { Console } from 'console'
 
 export async function middleware(request: NextRequest) {
   var pathname: string = request.nextUrl.pathname
   const { ua, device } = userAgent(request)
+  const geo = request.geo
+
   const response = NextResponse.next()
   const viewport =
     device.type === 'mobile' || device.type === 'tablet' ? 'mobile' : 'desktop'
-
-  if (pathname === '/' && ua !== 'Vercel Edge Functions') {
-    response.headers.set('X-device', viewport)
-    const url = request.nextUrl
-    url.searchParams.set('viewport', viewport)
-
-    const geo = request.geo
+  if (ua !== 'Vercel Edge Functions') {
+    response.cookies.set('X-Device', viewport)
+    console.log(geo)
     if (geo?.city && geo?.latitude && geo?.longitude) {
-      response.headers.set('X-City', geo.city)
-      response.headers.set('X-Latitude', geo.latitude)
-      response.headers.set('X-Longitude', geo.longitude)
-
-      console.log('Middleware', { geoData: request.geo })
+      const { city, latitude, longitude } = geo
+      response.cookies.set('X-City', city)
+      response.cookies.set('X-Latitude', latitude)
+      response.cookies.set('X-Longitude', longitude)
     }
     if (pathname.startsWith('/event')) {
       // Dynamic params eventId  rename pathname to indentify a protected route
