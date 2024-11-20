@@ -1,133 +1,59 @@
-'use client'
-import { useState, useEffect, useRef } from 'react'
-import ChevronBtn from './ChevronBtn'
+import { Booking, Evento, Events as EventType } from '@/types/event/event'
 import LinkButton from '@/ui/buttons/LinkButton/LinkButton'
-import CardOnline from './CardOnline'
-const ONLINE_EVENTS = [
-  {
-    dateTime: ['25/07/2023', '11:00'],
-    title: 'The Healing Clinic',
-    link: '#',
-    photo: '/images/online/yoann-boyer-i14h2xyPr18-unsplash.jpg',
-    users: [
-      { name: 'Alba', link: '#' },
-      { name: 'John Doe', link: '#' },
-      { name: 'Albert', link: '#' },
-      { name: 'Lucas Bean', link: '#' },
-      { name: 'Rory Lee', link: '#' },
-      { name: 'Charlotte Smith', link: '#' },
-    ],
-  },
-  {
-    dateTime: ['25/07/2023', '15:00'],
-    title: 'Price of Persia',
-    link: '#',
-    photo: '/images/online/zoltan-tasi-5SZP8OTK9wo-unsplash.jpg',
-    users: [
-      { name: 'Charlotte Smith', link: '#' },
-      { name: 'Rory Lee', link: '#' },
-      { name: 'Jamie Stock', link: '#' },
-    ],
-  },
-  {
-    dateTime: ['28/07/2023', '18:00'],
-    title: 'Brew house',
-    link: '#',
-    photo: '/images/online/timothy-dykes-Lq1rOaigDoY-unsplash.jpg',
-    users: [
-      { name: 'Lucas Bean', link: '#' },
-      { name: 'Rory Lee', link: '#' },
-      { name: 'Charlotte Smith', link: '#' },
-      { name: 'Rory Lee', link: '#' },
-      { name: 'Jamie Stock', link: '#' },
-    ],
-  },
-  {
-    dateTime: ['28/07/2023', '18:00'],
-    title: 'Spaghetti Code',
-    photo: '/images/online/timothy-dykes-Lq1rOaigDoY-unsplash.jpg',
-    link: '#',
-    users: [
-      { name: 'Jamie Stock', link: '#' },
-      { name: 'Lucas Bean', link: '#' },
-      { name: 'Charlotte Smith', link: '#' },
-      { name: 'Rory Lee', link: '#' },
-    ],
-  },
-  {
-    dateTime: ['25/07/2023', '11:00'],
-    title: 'The Healing Clinic 2',
-    link: '#',
-    photo: '/images/online/yoann-boyer-i14h2xyPr18-unsplash.jpg',
-    users: [
-      { name: 'Alba', link: '#' },
-      { name: 'John Doe', link: '#' },
-      { name: 'Albert', link: '#' },
-      { name: 'Lucas Bean', link: '#' },
-      { name: 'Rory Lee', link: '#' },
-      { name: 'Charlotte Smith', link: '#' },
-    ],
-  },
-]
-const CARD_WIDTH = 274
+import Events from '../Events/Events'
+const { DB_URL } = process.env
 
-export default function OnlineEvents() {
-  const [slide, setSlide] = useState(0)
-  const [carouselWidthDiff, setCarouselWidthDiff] = useState(0)
-  const ref = useRef<HTMLDivElement>(null)
+const EventsFetcher = async (): Promise<EventType> => {
+  const response = await fetch(
+    `${DB_URL}/items/byUser/event-online?withBookings=true`,
+    {
+      method: 'GET',
+      next: { revalidate: 0, tags: ['eventOnlineFetcher'] },
+    },
+  )
 
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      if (ref.current) {
-        const boxWidth = ref.current.getBoundingClientRect().width
-
-        const calculatedCarouselWidth = ONLINE_EVENTS.length * CARD_WIDTH - 24
-        const newCarouselWidthDiff = calculatedCarouselWidth - boxWidth
-        setCarouselWidthDiff(newCarouselWidthDiff)
-      }
-    })
-
-    if (ref.current) {
-      resizeObserver.observe(ref.current)
-    }
-
-    return () => {
-      resizeObserver.disconnect()
-    }
-  }, [])
-
-  const handleClick = (isLeft: boolean) => {
-    if ((isLeft && slide > 0) || (!isLeft && slide < carouselWidthDiff)) {
-      const step = isLeft ? -CARD_WIDTH : CARD_WIDTH
-      const isLastStep = isLeft
-        ? slide - CARD_WIDTH <= 0
-        : carouselWidthDiff - slide < CARD_WIDTH
-      setSlide((prev) => (isLastStep ? prev + step : prev + step))
-    }
+  const parsedData: Array<{ items: Array<Evento | Booking>; count: number }> =
+    await response.json()
+  console.log(parsedData)
+  if (parsedData.length === 0) {
+  }
+  const isEvent = (item: Evento | Booking): item is Evento => {
+    return item.type === 'event-online'
   }
 
+  const events = parsedData.map(({ items }) => {
+    const eventIndex = items.findIndex(isEvent)
+    if (eventIndex === -1) {
+      throw new Error('No event found in items.')
+    }
+
+    const event = items[eventIndex] as Evento
+
+    const bookings = items.filter((item) => item !== event) as Booking[]
+    return { event, bookings }
+  })
+  return events
+}
+
+export default async function OnlineEvents() {
+  const onlineEvents = await EventsFetcher()
   return (
     <section id="online_events" className="mb-20">
-      <div className="flex justify-between items-center mb-10">
+      <div className="mb-10">
         <h3 className="font-semibold text-2xl sm:text-3xl mb-2">
-          Next Online Events
+          Events online
         </h3>
-        <LinkButton href="#">More events</LinkButton>
+        {onlineEvents.length > 4 && (
+          <LinkButton href="#">More events</LinkButton>
+        )}
       </div>
-      <div className="flex justify-between items-center relative">
-        <div ref={ref} className="overflow-hidden">
-          <div
-            className="flex gap-6 transition-transform"
-            style={{ transform: `translateX(${-slide}px)` }}
-          >
-            {ONLINE_EVENTS.map((card) => (
-              <CardOnline key={card.title} {...card} />
-            ))}
-          </div>
-        </div>
-        <ChevronBtn left clickHandler={handleClick} />
-        <ChevronBtn right clickHandler={handleClick} />
-      </div>
+      {onlineEvents.length === 0 ? (
+        <h5 className="text-2xl sm:text-3xl mb-2">
+          There are not events online published
+        </h5>
+      ) : (
+        <Events events={onlineEvents} />
+      )}
     </section>
   )
 }
