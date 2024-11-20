@@ -10,6 +10,33 @@ interface EventLocation {
   eventLocationLng: number
 }
 
+export type EventData =
+  | {
+      eventTitle: string
+      eventLink: string
+      eventLocationId: string
+      eventLocationAddress: string
+      eventLocationLng?: string
+      eventLocationLat?: string
+      eventGeoHash: string
+      eventCategory: string
+      eventPrice: number
+      eventTime: string
+      eventDate: string
+      eventDescription: stringe
+      files: File[]
+    }
+  | {
+      eventTitle: string
+      eventLink: string
+      eventCategory: string
+      eventPrice: number
+      eventTime: string
+      eventDate: string
+      eventDescription: string
+      files: File[]
+    }
+
 export interface ValidationErrors {
   eventTitle?: string[] | undefined
   eventLink?: string[] | undefined
@@ -33,7 +60,7 @@ interface Event {
 
   data: {
     createdAt: string
-    type: string
+    type: 'event-online' | 'event'
     eventOwnerId: string
     eventOwnerName: string
     eventOwnerEmail: string
