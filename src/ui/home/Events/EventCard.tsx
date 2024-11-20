@@ -18,7 +18,6 @@ export default function EventCard({ event, bookings }: EventWithBookings) {
     eventOwnerName,
     eventPrice,
   } = event
-  console.log({ bookings })
 
   return (
     <Link href={`event/${eventId}`} className="">

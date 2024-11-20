@@ -14,7 +14,6 @@ const EventsFetcher = async (): Promise<EventType> => {
 
   const parsedData: Array<{ items: Array<Evento | Booking>; count: number }> =
     await response.json()
-  console.log(parsedData)
   if (parsedData.length === 0) {
   }
   const isEvent = (item: Evento | Booking): item is Evento => {
