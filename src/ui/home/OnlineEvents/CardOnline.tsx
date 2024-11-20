@@ -1,21 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { EventWithBookings } from '@/types/event/event'
 
-type DateTime = string[]
-type User =
-  | {
-      name: string
-      link: string
-    }
-  | {}
-
-interface OnlineCardProps {
-  dateTime: DateTime
-  link: string
-  title: string
-  photo: string
-  users: Array<User>
-}
 const MONTHS: Array<string> = [
   'Jan',
   'Feb',
@@ -31,26 +17,46 @@ const MONTHS: Array<string> = [
   'Dec',
 ]
 
-export default function CardOnline(props: OnlineCardProps) {
-  const { dateTime, title, photo, link = '#' } = props
-  const [day, month, year] = dateTime[0].split('/')
-  const time = dateTime[1]
+export default function EventCard({ event, bookings }: EventWithBookings) {
+  const {
+    eventDateAndTime,
+    eventTitle,
+    eventPictures,
+    eventId,
+    eventOwnerName,
+  } = event
+  const [eventDate, eventTime] = eventDateAndTime.split('T')
+
+  const [year, month, day] = eventDate.split('-')
+  const time = eventTime.split(':')[0] + ':' + eventTime.split(':')[1]
 
   return (
-    <Link href={link} className="grow-0 shrink-0 w-auto flex h-full flex-col">
-      <div className="relative mb-3">
-        <Image src={photo} alt="event image" width={250} height={150} />
-
-        <div className="absolute top-2 left-2">
-          Icon <span>Online</span>
-        </div>
+    <Link
+      href={`event/${eventId}`}
+      className="grow-0 shrink-0 w-auto flex h-full flex-col"
+    >
+      <div className="mb-3 w-[250px] h-[160px] overflow-hidden rounded-md">
+        <Image
+          src={eventPictures[0]}
+          alt="event image"
+          className="object-cover w-full h-full"
+          width={350}
+          height={220}
+        />
       </div>
 
+      <div className="mb-4">
+        <h4 className="text-lg font-semibold text-red-400 line-clamp-3">
+          {eventTitle}
+        </h4>
+        <h5 className="text-sm font-bold text-gray-600 line-clamp-3">
+          Hosted by: {eventOwnerName}
+        </h5>
+      </div>
       <div>
-        <h4 className="text-base uppercase text-yellow-600 line-clamp-1">{`${day} ${
+        <h4 className="text-base uppercase text-teal-600 bold line-clamp-1">{`${day} ${
           MONTHS[Number(month)]
         } ${year} ${time}`}</h4>
-        <h4 className="font-lg text-gray-500 line-clamp-3">{title}</h4>
       </div>
     </Link>
   )
