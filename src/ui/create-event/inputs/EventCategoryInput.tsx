@@ -17,7 +17,7 @@ export default function eventCategoryInput({ error }: { error?: string[] }) {
         {error && (
           <span
             className="text-red-500 cursor-pointer"
-            title={'Select a category'}
+            title="Select a category"
           >
             *
           </span>

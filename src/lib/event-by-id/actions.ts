@@ -1,5 +1,5 @@
 'use server'
-import { EventByID } from '@/types/event/event'
+import { EventByID, Evento } from '@/types/event/event'
 import { decryptSessionCookie } from '@/lib/auth/session'
 import { revalidatePath } from 'next/cache'
 const { DB_URL } = process.env
@@ -34,6 +34,6 @@ export const getEventData = async (eventId: string) => {
   })
   const parsedData: EventByID = await response.json()
 
-  revalidatePath(`/event/${eventId}`)
+  revalidatePath(`/event/${eventId}-event`)
   return parsedData
 }

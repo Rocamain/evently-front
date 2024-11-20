@@ -1,19 +1,19 @@
 /* eslint-disable camelcase */
 'use client'
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService'
 import { EventLocation } from '@/types/event/event'
 const apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY
-
-export const usePlacesAutoComplete = (place?: {
+interface Place {
   city: string
   latitude: string
   longitude: string
-}) => {
+}
+
+export const usePlacesAutoComplete = (place?: Place) => {
   const [placeSelected, setPlaceSelected] = useState<EventLocation | null>(null)
   const [show, setShow] = useState(false)
   const [inputValue, setInputValue] = useState<string>('')
-
   const {
     placesService,
     placePredictions,
@@ -23,13 +23,23 @@ export const usePlacesAutoComplete = (place?: {
     apiKey,
     debounce: 350,
     language: 'en-gb',
+
+    options: {
+      input: inputValue,
+      types: !place ? ['establishment', 'geocode'] : ['(regions)', 'address'],
+    },
   })
 
   const setPlaceInfo = (placeId: string) => {
     placesService?.getDetails(
       {
         placeId,
-        fields: ['geometry.location', 'name', 'formatted_address'],
+        fields: [
+          'geometry.location',
+          'name',
+          'formatted_address',
+          'address_components',
+        ],
       },
       (placeDetails) => {
         if (

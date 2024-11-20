@@ -1,7 +1,7 @@
 import Card from './Card'
-import LinkButton from '@/ui/buttons/LinkButton/LinkButton'
 import Instructions from '../Instructions/Instructions'
 import OnlineEvents from '../OnlineEvents/OnlineEvents'
+import ButtonCarousel from './ButtonsCarousel'
 
 const EVENTS = [
   {
@@ -41,22 +41,13 @@ const BUTTONS = [
 export default function Event() {
   return (
     <>
-      <section className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-5">
+      <section className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
         {EVENTS.map((event) => (
           <Card key={event.link.title} {...event} />
         ))}
       </section>
-      <section className="md:h-auto w-full flex flex-wrap py-8 lg:mx-0 md: overflow-x-auto  md:w-auto">
-        <div className="flex flex-wrap gap-x-2 gap-y-3 md:flex-nowrap sm:px-2 md:px-4">
-          {BUTTONS.map((button) => (
-            <div key={button.title} className="flex items-center">
-              <LinkButton href={button.href}>{button.title}</LinkButton>
-            </div>
-          ))}
-        </div>
-      </section>
+      <ButtonCarousel buttons={BUTTONS} />
       <Instructions />
-      <OnlineEvents />
     </>
   )
 }

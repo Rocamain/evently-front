@@ -10,7 +10,7 @@ interface INSTRUCTIONS_CARDS {
 function CardInstructions(props: INSTRUCTIONS_CARDS) {
   const { title, text, icon, link } = props
   return (
-    <div className="flex flex-col sm:w-1/3 items-center space-y-2 px-6 p1ym4qhs">
+    <div className="flex flex-col sm:w-1/3 items-center space-y-2 md:px-6">
       <Image src={icon} alt="icon" width={150} height={160} />
       <div className="text-center">
         <div className="mb-3">

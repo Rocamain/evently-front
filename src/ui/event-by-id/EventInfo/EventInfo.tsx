@@ -31,35 +31,31 @@ export const EventInfo: React.FC<EventInfoProps> = ({
         <div className="py-6 px-5 sm:px-10  md:px-20 lg:px-0 bg-gray-200/40 lg:bg-white border-b border-shadowColor lg:border-gray-300 lg:border lg:border-b-0 lg:rounded-t-lg">
           <div className="flex flex-col lg:mx-4">
             <div className="flex items-center">
-              <div className="w-8 h-8 flex items-center justify-center">
+              <div className="min-w-8 h-8 flex items-center justify-center">
                 <ClockIcon className="text-gray-500 w-full h-full" />
               </div>
               <time
                 dateTime={time}
                 title={time}
-                className="ml-2 whitespace-nowrap overflow-hidden text-ellipsis"
+                className="ml-2 whitespace-wrap overflow-hidden text-ellipsis"
               >
                 {time}
               </time>
             </div>
 
             <div className="flex items-center mt-2">
-              <div className="w-8 h-8 flex items-center justify-center">
+              <div className="min-w-8 h-8 flex items-center justify-center">
                 <HomeIcon className="text-gray-500 w-full h-full" />
               </div>
-              <address>
-                <Link
-                  target="_blank"
-                  href={eventLink}
-                  className="ml-2 whitespace-nowrap overflow-hidden text-ellipsis"
-                >
+              <address className="ml-2 max-w-[45s0px] whitespace-wrap overflow-hidden text-ellipsis">
+                <Link target="_blank" href={eventLink} className="">
                   {eventLocationAddress}
                 </Link>
               </address>
             </div>
 
             <div className="group flex items-center mt-2 text-teal-600 font-semibold hover:text-red-400">
-              <div className="w-8 h-8 flex items-center justify-center">
+              <div className="min-w-8 h-8 flex items-center justify-center">
                 <LinkIcon className="text-gray-500 w-full h-full group-hover:text-red-400" />
               </div>
               <Link

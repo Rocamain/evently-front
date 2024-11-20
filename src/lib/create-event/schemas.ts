@@ -27,20 +27,9 @@ const FileArraySchema = z
   )
   .min(1, 'Event requires at least one picture')
 
-export const CreateEventSchema = z.object({
+export const CreateOnlineEventSchema = z.object({
   eventTitle: z.string().min(1, 'Event title is required'),
   eventLink: z.string().url('Invalid URL'),
-  eventLocationId: z.string().min(1, 'Event location ID is required'),
-  eventLocationAddress: z.string().min(1, 'Event location address is required'),
-  eventLocationLat: z
-    .number()
-    .min(-90, 'Invalid latitude')
-    .max(90, 'Invalid latitude'),
-  eventLocationLng: z
-    .number()
-    .min(-180, 'Invalid longitude')
-    .max(180, 'Invalid longitude'),
-  eventGeoHash: z.string(),
   eventCategory: z.string().min(1, 'Event category is required'),
   eventPrice: z.number().min(0, 'Event price must be a positive number'),
   eventTime: z
@@ -50,6 +39,23 @@ export const CreateEventSchema = z.object({
   eventDescription: z.string().min(1, 'Event description is required'),
   files: FileArraySchema,
 })
+
+export const CreateEventSchema = CreateOnlineEventSchema.merge(
+  z.object({
+    eventLocationAddress: z
+      .string()
+      .min(1, 'Event location address is required'),
+    eventLocationLat: z
+      .number()
+      .min(-90, 'Invalid latitude')
+      .max(90, 'Invalid latitude'),
+    eventLocationLng: z
+      .number()
+      .min(-180, 'Invalid longitude')
+      .max(180, 'Invalid longitude'),
+    eventGeoHash: z.string(),
+  }),
+)
 
 // Define the interface
 export interface CreateEventState {

@@ -11,7 +11,7 @@ export default function LinkButton({
   const className = styles[variant][color][size]
 
   return (
-    <div className="flex">
+    <div className="flex justify-center">
       <Link
         {...props}
         className={className + ' whitespace-nowrap'}

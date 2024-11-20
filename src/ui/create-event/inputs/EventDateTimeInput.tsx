@@ -28,7 +28,7 @@ export default function eventDateTimeInput({ error }: { error?: string[] }) {
           <div className="relative w-[100px]">
             <label htmlFor="eventTime" className="sr-only"></label>
             <label htmlFor="eventTime" className="sr-only"></label>
-            <div className="absolute inset-y-0 start-2 top-0 flex items-center ps-0.5 pointer-events-none">
+            {/* <div className="absolute inset-y-0 start-2 top-0 flex items-center ps-0.5 pointer-events-none">
               <svg
                 className="w-4 h-4 text-gray-500 dark:text-gray-400"
                 aria-hidden="true"
@@ -42,12 +42,12 @@ export default function eventDateTimeInput({ error }: { error?: string[] }) {
                   clipRule="evenodd"
                 />
               </svg>
-            </div>
+            </div> */}
             <input
               type="time"
               id="eventTime"
               name="eventTime"
-              className="pl-8 cursor-text bg-gray-100 border rounded-md leading-none border-gray-300 font-medium text-md focus:ring-red-500 focus:border-red-500 block w-full py-2 px-2.5"
+              className="cursor-text bg-gray-100 border rounded-md leading-none border-gray-300 font-medium text-md focus:ring-red-500 focus:border-red-500 block w-full py-2 px-2.5"
             />
           </div>
           <div className="w-[160px]">
