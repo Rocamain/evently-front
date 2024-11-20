@@ -36,12 +36,16 @@ export default function RootLayout({
         <body className={inter.className + ' overscroll-none'}>
           <MenuProvider>
             <Header />
-            <main id="background-blob" className="relative mt-4">
+            <main
+              id="background-blob"
+              className="relative top-[198px] sm:top-[95px] w-full m-auto pt-8 md:pt-12 px-4 sm:px-6 md:max-w-4xl lg:max-w-6xl xl:px-4 mb-20"
+            >
               {children}
               {modal}
             </main>
           </MenuProvider>
           <footer
+            className="relative top-[198px] sm:top-[95px] "
             style={{
               height: '25vh',
               backgroundColor: 'black',
