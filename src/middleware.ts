@@ -1,19 +1,16 @@
 import { type NextRequest, NextResponse, userAgent } from 'next/server'
 import { verifySession } from './lib/auth/session'
 import { PROTECTED_ROUTES } from './lib/utils/constants'
-import { Console } from 'console'
 
 export async function middleware(request: NextRequest) {
   var pathname: string = request.nextUrl.pathname
   const { ua, device } = userAgent(request)
   const geo = request.geo
-
   const response = NextResponse.next()
   const viewport =
     device.type === 'mobile' || device.type === 'tablet' ? 'mobile' : 'desktop'
   if (ua !== 'Vercel Edge Functions') {
     response.cookies.set('X-Device', viewport)
-    console.log(geo)
     if (geo?.city && geo?.latitude && geo?.longitude) {
       const { city, latitude, longitude } = geo
       response.cookies.set('X-City', city)
@@ -33,14 +30,12 @@ export async function middleware(request: NextRequest) {
       paths[2] = '[bookingId]'
       pathname = paths.join(' ').replaceAll(' ', '/')
     }
+  }
 
-    const isProtectedRoute = PROTECTED_ROUTES.includes(pathname)
-    if (isProtectedRoute) {
-      const isVerified = await verifySession()
-
-      if (!isVerified)
-        return NextResponse.redirect(new URL('/', request.nextUrl))
-    }
+  const isProtectedRoute = PROTECTED_ROUTES.includes(pathname)
+  if (isProtectedRoute) {
+    const isVerified = await verifySession()
+    if (!isVerified) return NextResponse.redirect(new URL('/', request.nextUrl))
   }
   return response
 }
