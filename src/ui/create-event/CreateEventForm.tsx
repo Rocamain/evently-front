@@ -74,7 +74,6 @@ export default function CreateEventForm() {
     CreateEventAction,
     undefined,
   )
-
   useEffect(() => {
     if (state?.errors) {
       const stepOneError = [
@@ -88,7 +87,7 @@ export default function CreateEventForm() {
         'eventPrice',
       ]
       const stepTwoError = ['eventDescription']
-      const stepThreeError = ['eventPictures']
+      const stepThreeError = ['files']
       const goBackTostepOne = stepOneError.some((errorType) =>
         state.errors.hasOwnProperty(errorType),
       )
