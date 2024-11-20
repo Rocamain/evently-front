@@ -50,7 +50,7 @@ export default async function CloseEvents() {
 
   const closeEvents = await EventsFetcher({ city, latitude, longitude })
   return (
-    <section id="online_events" className="mb-20">
+    <section id="close_events" className="pb-16">
       <div className="mb-10">
         <h3 className="font-semibold text-2xl sm:text-3xl mb-2">
           Events <EditLocationButton>{city}</EditLocationButton>
