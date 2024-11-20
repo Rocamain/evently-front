@@ -1,25 +1,74 @@
 'use server'
 import { encodeGeohash } from '../utils'
 import { processFiles } from './utils'
-import { EventLocation } from '@/types/event/event'
-import { CreateEventSchema } from './schemas'
-import { CreateEventState, Event } from '@/types/event/event'
+import {
+  EventLocation,
+  CreateEventState,
+  Event,
+  EventData,
+} from '@/types/event/event'
+import { CreateEventSchema, CreateOnlineEventSchema } from './schemas'
 import { decryptSessionCookie, verifySession } from '../auth/session'
 import { redirect } from 'next/navigation'
 
+type EventFormData = {
+  eventTitle: string
+  eventLink: string
+  eventCategory: string
+  eventPrice: number
+  eventTime: string // e.g., formatted as "HH:mm:ss"
+  eventDate: string
+  eventDescription: string
+  files: File[]
+} & Partial<{
+  eventLocationId: number
+  eventLocationLng: number
+  eventLocationLat: number
+  eventLocationAddress: string
+  eventGeoHash: string
+}>
+
 const { DB_URL } = process.env
 
-const setFormDataFromEventLocation = (
-  eventLocationData: string,
-  formData: FormData,
-) => {
+// Helper to set form data with eventOwner information
+const setEventOwnerInfo = async (formData: FormData, accessToken: unknown) => {
+  const response = await fetch(`${DB_URL}/getuser`, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  })
+
+  if (response.status !== 200) {
+    return redirect('/signin')
+  }
+
+  const user = await response.json()
+  const eventOwnerData = {
+    eventOwnerId: user.Username,
+    eventOwnerName: `${user.UserAttributes[2].Value} ${user.UserAttributes[3].Value}`,
+    eventOwnerEmail: user.UserAttributes[0].Value,
+    eventOwnerPicture: user.UserAttributes[4].Value,
+  }
+  Object.entries(eventOwnerData).forEach(([key, value]) =>
+    formData.set(key, value),
+  )
+}
+
+// Helper to set form data from event location
+const setFormDataFromEventLocation = (formData: FormData) => {
   try {
-    const parsedEventLocationData = JSON.parse(
-      eventLocationData,
-    ) as EventLocation
-    Object.entries(parsedEventLocationData).forEach(([key, value]) => {
-      formData.set(key, value)
-    })
+    const eventLocation = formData.get('eventLocation') as string
+
+    if (eventLocation !== 'online') {
+      const parsedEventLocationData = JSON.parse(eventLocation) as EventLocation
+      Object.entries(parsedEventLocationData).forEach(([key, value]) =>
+        formData.set(key, value),
+      )
+    }
+
+    if (eventLocation === 'online') {
+      formData.set('eventLocationId', 'online')
+    }
+
     formData.delete('eventLocation')
   } catch (error) {
     return {
@@ -31,132 +80,101 @@ const setFormDataFromEventLocation = (
   }
 }
 
+// Helper to validate event data and images
+const validateEventData = (data: EventData, isEventOnline: boolean) => {
+  const schema = isEventOnline ? CreateOnlineEventSchema : CreateEventSchema
+  const validation = schema.safeParse(data)
+  if (!validation.success) {
+    return { errors: validation.error.flatten().fieldErrors }
+  }
+  if (
+    data.files &&
+    data.files.length === 1 &&
+    data.files[0].name === 'undefined'
+  ) {
+    return { errors: { eventPictures: ['Add a valid image'] } }
+  }
+  return null
+}
+
 // Main function to handle event creation
 export async function CreateEventAction(
   state: CreateEventState,
   formData: FormData,
 ): Promise<CreateEventState> {
-  // Ensure the return type is CreateEventState
-
   // Verify session
   if (!(await verifySession())) {
     return redirect('/signin')
   }
 
-  // Extract form data
-  const eventTitle = formData.get('eventTitle') as string
-  const eventLink = formData.get('eventLink') as string
-  const eventLocation = formData.get('eventLocation') as string
-  const eventCategory = formData.get('eventCategory') as string
-  const eventPrice = parseFloat((formData.get('eventPrice') as string).trim())
-  const eventTime = formData.get('eventTime') as string
-  const eventDate = formData.get('eventDate') as string
-  const eventDescription = formData.get('eventDescription') as string
-  const files = formData
-    .getAll('eventPictures')
-    .filter((item) => item instanceof File) as File[]
+  // Decrypt session and extract access token
+  const { accessToken } = await decryptSessionCookie()
 
-  formData.set('type', 'event')
-  // Get and set geohash
-  setFormDataFromEventLocation(eventLocation, formData)
-  const eventLocationLng = parseFloat(
-    formData.get('eventLocationLng') as string,
-  )
-  const eventLocationLat = parseFloat(
-    formData.get('eventLocationLat') as string,
-  )
-
-  formData.set(
-    'eventGeoHash',
-    encodeGeohash({ eventLocationLng, eventLocationLat }),
-  )
+  // Set form data for event location and geohash
+  const isEventOnline = formData.get('type') === 'event-online'
+  setFormDataFromEventLocation(formData)
 
   // Prepare data for validation
-  const data = {
-    eventTitle,
-    eventLink,
-    eventLocationId: formData.get('eventLocationId'),
-    eventLocationAddress: formData.get('eventLocationAddress'),
-    eventGeoHash: formData.get('eventGeoHash'),
-    eventCategory,
-    eventLocationLng,
-    eventLocationLat,
-    eventPrice,
-    eventTime: `${eventTime}:00`, // Ensuring time format is HH:mm:ss
-    eventDate,
-    eventDescription,
-    files,
+  let data: EventFormData = {
+    eventTitle: formData.get('eventTitle') as string,
+    eventLink: formData.get('eventLink') as string,
+    eventCategory: formData.get('eventCategory') as string,
+    eventPrice: parseFloat((formData.get('eventPrice') as string).trim()),
+    eventTime: `${formData.get('eventTime')}:00`, // Format as HH:mm:ss
+    eventDate: formData.get('eventDate') as string,
+    eventDescription: formData.get('eventDescription') as string,
+    files: formData
+      .getAll('eventPictures')
+      .filter((item) => item instanceof File) as File[],
   }
 
-  // Validate fields
-  const validatedFields = CreateEventSchema.safeParse(data)
-  if (!validatedFields.success) {
-    if (files.length === 1 && files[0].name === 'undefined') {
-      return {
-        errors: {
-          eventPictures: ['Add a valid image'],
-          ...validatedFields.error.flatten().fieldErrors,
-        },
-      }
-    }
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
+  if (!isEventOnline) {
+    const lng = parseFloat(formData.get('eventLocationLng') as string)
+    const lat = parseFloat(formData.get('eventLocationLat') as string)
+    formData.set(
+      'eventGeoHash',
+      encodeGeohash({ eventLocationLng: lng, eventLocationLat: lat }),
+    )
+    data = {
+      eventLocationId: parseFloat(formData.get('eventLocationId') as string),
+      eventLocationLng: parseFloat(formData.get('eventLocationLng') as string),
+      eventLocationLat: parseFloat(formData.get('eventLocationLat') as string),
+      eventLocationAddress: formData.get('eventLocationAddress') as string,
+      eventGeoHash: formData.get('eventGeoHash') as string,
+      ...data,
     }
   }
 
-  if (files.length === 1 && files[0].name === 'undefined') {
-    return {
-      errors: { eventPictures: ['Add a valid image'] },
-    }
+  // Validate data and files
+  const validationErrors = validateEventData(data, isEventOnline)
+  if (validationErrors) {
+    return validationErrors
   }
 
   try {
-    const session = await decryptSessionCookie()
-    const response = await fetch(`${DB_URL}/getuser`, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${session.accessToken}` },
-    })
+    // Set owner information
+    await setEventOwnerInfo(formData, accessToken)
 
-    if (response.status !== 200) {
-      return redirect('/signin')
-    }
-
-    const user = await response.json()
-    const eventOwnerData = {
-      eventOwnerId: user.Username as string,
-      eventOwnerName:
-        `${user.UserAttributes[2].Value} ${user.UserAttributes[3].Value}` as string,
-      eventOwnerEmail: user.UserAttributes[0].Value as string,
-      eventOwnerPicture: user.UserAttributes[4].Value as string,
-    }
-
-    Object.entries(eventOwnerData).forEach(([key, value]) =>
-      formData.set(key, value),
-    )
-
-    // Process images
-
-    const eventPictures = await processFiles(files, {
+    // Process images and add them to form data
+    const processedImages = await processFiles(data.files, {
       main: [500, 400],
       secondary: [400, 340],
     })
-
     formData.delete('eventPictures')
-    eventPictures.forEach((file) => formData.append('eventPictures', file))
-
-    const res = await fetch(`${DB_URL}/item`, {
+    processedImages.forEach((file) => formData.append('eventPictures', file))
+    // Send event data to the API
+    const response = await fetch(`${DB_URL}/item`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${session.accessToken}` },
+      headers: { Authorization: `Bearer ${accessToken}` },
       body: formData,
     })
 
-    const parsedBody: Event = await res.json()
-    console.log({ parsedBody })
-    if (parsedBody?.data?.error) {
-      return parsedBody.data.error
+    const result: Event = await response.json()
+    if (result?.data?.error) {
+      return result.data.error
     }
 
-    return { message: 'Event created', eventId: parsedBody.data.eventId }
+    return { message: 'Event created', eventId: result.data.eventId }
   } catch (error) {
     return {
       errors: {
