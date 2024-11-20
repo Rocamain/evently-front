@@ -1,21 +1,13 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { EventWithBookings } from '@/types/event/event'
+import {
+  CalendarDaysIcon,
+  UserIcon,
+  CurrencyPoundIcon,
+} from '@heroicons/react/16/solid'
 
-const MONTHS: Array<string> = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-]
+// import { CurrencyPoundIcon } from '@heroicons/react/24/outline'
 
 export default function EventCard({ event, bookings }: EventWithBookings) {
   const {
@@ -24,18 +16,13 @@ export default function EventCard({ event, bookings }: EventWithBookings) {
     eventPictures,
     eventId,
     eventOwnerName,
+    eventPrice,
   } = event
-  const [eventDate, eventTime] = eventDateAndTime.split('T')
-
-  const [year, month, day] = eventDate.split('-')
-  const time = eventTime.split(':')[0] + ':' + eventTime.split(':')[1]
+  console.log({ bookings })
 
   return (
-    <Link
-      href={`event/${eventId}`}
-      className="grow-0 shrink-0 w-auto flex h-full flex-col"
-    >
-      <div className="mb-3 w-[250px] h-[160px] overflow-hidden rounded-md">
+    <Link href={`event/${eventId}`} className="">
+      <div className="mb-2 rounded-md overflow-hidden w-full aspect-[16/9]">
         <Image
           src={eventPictures[0]}
           alt="event image"
@@ -45,18 +32,41 @@ export default function EventCard({ event, bookings }: EventWithBookings) {
         />
       </div>
 
-      <div className="mb-4">
-        <h4 className="text-lg font-semibold text-red-400 line-clamp-3">
+      <div className="mb-1">
+        <h4 className="mb-1 text-lg font-semibold text-gray-600">
           {eventTitle}
         </h4>
-        <h5 className="text-sm font-bold text-gray-600 line-clamp-3">
-          Hosted by: {eventOwnerName}
+        <h5 className="text-sm font-semibold text-gray-600">
+          Hosted by: <span className="font-medium">{eventOwnerName}</span>
         </h5>
       </div>
-      <div>
-        <h4 className="text-base uppercase text-teal-600 bold line-clamp-1">{`${day} ${
-          MONTHS[Number(month)]
-        } ${year} ${time}`}</h4>
+      <div className="flex mb-1">
+        <CalendarDaysIcon className="h-[1.2rem] mr-1 text-sm text-gray-600 bold" />
+        <p className="text-sm text-gray-600 bold">
+          {new Intl.DateTimeFormat('en-GB', {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            timeZoneName: 'short',
+          }).format(new Date(eventDateAndTime))}
+        </p>
+      </div>
+      <div className="flex gap-4">
+        <div className="flex">
+          <UserIcon className="h-[1.2rem] mr-1 text-sm text-gray-600 bold line-clamp-1" />
+          <p className="text-sm text-gray-600 bold">
+            {bookings.length + 1} attending
+          </p>
+        </div>
+        <div className="flex">
+          <CurrencyPoundIcon className="h-[1.2rem] mr-1 text-sm text-gray-600 bold line-clamp-1" />
+          <p className="text-sm text-gray-600 bold line-clamp-1">
+            {eventPrice === 0 ? 'Free' : eventPrice.toFixed(2)}
+          </p>
+        </div>
       </div>
     </Link>
   )
