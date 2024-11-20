@@ -30,16 +30,16 @@ const INSTRUCTIONS = {
 
 export default function Instructions() {
   return (
-    <section className=" md:h-auto w-full py-8 lg:mx-0 md: overflow-x-auto  md:w-auto">
-      <div className="text-center  relative z-10 p-20 pb-10">
+    <section className="pb-16 lg:mx-0 md: overflow-x-auto  md:w-auto">
+      <div className="text-center z-10 md:p-20 md:pb-10">
         <h2 className="text-left sm:text-center text-2xl sm:text-3xl font-semibold mb-2">
           {INSTRUCTIONS.header.title}
         </h2>
-        <p className="text-left sm:text-center w-full sm:w-2/3 lg:w-1/2 mb-4 mx-auto">
+        <p className="text-left sm:text-center sm:w-2/3 lg:w-1/2 mb-4 mx-auto">
           {INSTRUCTIONS.header.text}
         </p>
       </div>
-      <div className="flex flex-wrap  justify-center gap-x-2 gap-y-3 md:flex-nowrap sm:px-2 md:px-4 mb-10">
+      <div className="flex flex-wrap justify-center gap-x-2 gap-y-3 md:flex-nowrap sm:px-2 md:px-4 mb-10">
         {INSTRUCTIONS.cards.map((card) => (
           <CardInstructions key={card.title} {...card} />
         ))}
